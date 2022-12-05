@@ -3,6 +3,7 @@ from airport import Airport
 from goal import Goal
 import config
 
+
 class Game:
 
     def __init__(self, id, loc, consumption, player=None):
@@ -10,36 +11,35 @@ class Game:
         self.location = []
         self.goals = []
 
-        if id==0:
+        if id == 0:
             # new game
             # Create new game id
             letters = string.ascii_lowercase + string.ascii_uppercase + string.digits
 
             self.status = {
-                "id" : ''.join(random.choice(letters) for i in range(20)),
-                "name" : player,
-                "co2" : {
-                    "consumed" : config.co2_initial,
-                    "budget" : config.co2_budget
+                "id": ''.join(random.choice(letters) for i in range(20)),
+                "name": player,
+                "co2": {
+                    "consumed": config.co2_initial,
+                    "budget": config.co2_budget
                 },
-                "previous_location" : ""
+                "previous_location": ""
             }
 
-
-            #self.id = ''.join(random.choice(letters) for i in range(20))
-            #self.footprint = config.initial_footprint
+            # self.id = ''.join(random.choice(letters) for i in range(20))
+            # self.footprint = config.initial_footprint
             self.location.append(Airport(loc, True))
-            #self.player = player
+            # self.player = player
             # Insert new game into DB
             sql = "INSERT INTO Game VALUES ('" + self.status["id"] + "', " + str(self.status["co2"]["consumed"])
             sql += ", " + str(self.status["co2"]["budget"]) + ", '" + loc + "', '" + self.status["name"] + "')"
             print(sql)
             cur = config.conn.cursor()
             cur.execute(sql)
-            #config.conn.commit()
+            # config.conn.commit()
 
         else:
-            #update consumption and budget
+            # update consumption and budget
             sql2 = "UPDATE Game SET co2_consumed = co2_consumed + " + consumption + ", co2_budget = co2_budget - " + consumption + " WHERE id='" + id + "'"
             print(sql2)
             cur2 = config.conn.cursor()
@@ -59,7 +59,7 @@ class Game:
                         "consumed": res[0][1],
                         "budget": res[0][2]
                     },
-                    "previous_location" : res[0][3]
+                    "previous_location": res[0][3]
                 }
                 # old location in DB currently not used
                 apt = Airport(loc, True)
@@ -72,20 +72,14 @@ class Game:
         # read game's goals
         self.fetch_goal_info()
 
-
-
-
-
-
     def set_location(self, sijainti):
-        #self.location = sijainti
+        # self.location = sijainti
         sql = "UPDATE Game SET location='" + sijainti.ident + "' WHERE id='" + self.status["id"] + "'"
         print(sql)
         cur = config.conn.cursor()
         cur.execute(sql)
-        #config.conn.commit()
-        #self.loc = sijainti.ident
-
+        # config.conn.commit()
+        # self.loc = sijainti.ident
 
     def fetch_goal_info(self):
 
@@ -104,7 +98,7 @@ class Game:
         cur.execute(sql)
         res = cur.fetchall()
         for a in res:
-            if a[4]==self.status["id"]:
+            if a[4] == self.status["id"]:
                 is_reached = True
             else:
                 is_reached = False

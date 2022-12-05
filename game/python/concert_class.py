@@ -1,7 +1,7 @@
 import random
 import mysql.connector
 from airport_class import Airport
-from game.api_stuff.random_genre_request import genre_request
+
 
 
 class Concert:
@@ -48,11 +48,11 @@ while len(concerts) != 6:
     rnd_airport_num = random.randint(0, len(airports) - 1)
     if not airports[rnd_airport_num].concert_here:
         genre = genre_request()
-        if genre is None:  # TODO Korjaa for looppi. Sen sisälle voi mennä samoja arvoja jos random lentokenttä on sama.
+        if genre is None:  # Tän vois ehkä tehdä paremmin
             for default_genre in default_genres:
-                rnd_airport_num = random.randint(0, len(airports) - 1)
-                airports[rnd_airport_num].concert_here = True
-                concerts.append(Concert(default_genre, airports[rnd_airport_num].icao))
+                if not airports[rnd_airport_num].concert_here:
+                    airports[rnd_airport_num].concert_here = True
+                    concerts.append(Concert(default_genre, airports[rnd_airport_num].icao))
 
         else:
             airports[rnd_airport_num].concert_here = True
