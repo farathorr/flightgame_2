@@ -136,6 +136,26 @@ main {
   margin: 0.3rem;
 }
 
+.box2 li {
+  width: calc(100% - 0.6rem);
+  text-align: center;
+  border: var(--grey) solid 1px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 0.3rem;
+  margin: 0.3rem;
+}
+
+
+.box3 li {
+  width: calc(100% - 0.6rem);
+  text-align: center;
+  border: var(--grey) solid 1px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 0.3rem;
+  margin: 0.3rem;
+}
 .box img {
   height: 3rem;
 }

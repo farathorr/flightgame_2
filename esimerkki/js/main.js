@@ -140,6 +140,32 @@ async function gameSetup(url) {
 }
 
 // event listener to hide goal splash
-document.querySelector('.goal').addEventListener('click', function (evt) {
+/*document.querySelector('.goal').addEventListener('click', function (evt) {
   evt.currentTarget.classList.add('hide');
 });
+*/
+let tehtava_button = document.getElementById("t_button")
+let konsertti_button = document.getElementById("k_button")
+tehtava_button.addEventListener("click", hidequest);
+konsertti_button.addEventListener("click", hideconsert);
+
+
+function hidequest() {
+  var x = document.getElementById("myDIV");
+  var y = document.getElementById("tehtava")
+  if (x.style.display === "none") {
+    x.style.display = "block";
+    y.style.display = "none";
+  }
+  else y.style.display = "none";
+}
+
+function hideconsert() {
+  var x = document.getElementById("myDIV");
+  var y = document.getElementById("tehtava")
+  if (y.style.display === "none") {
+    y.style.display = "block";
+    x.style.display = "none";
+  }
+  else x.style.display = "none";
+}
