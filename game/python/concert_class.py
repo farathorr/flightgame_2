@@ -1,7 +1,6 @@
 import random
-import mysql.connector
-from airport_class import generate_airports
 from random_genre_request import genre_request
+from airport_class import generate_airports
 
 
 class Concert:
@@ -20,20 +19,10 @@ class Concert:
         return money
 
 
+airports = generate_airports()
+
+
 # concert generation
-def connect_db():
-    return mysql.connector.connect(
-        host='127.0.0.1',
-        port=3306,
-        database='flight_game1',
-        user='root',
-        password='1557',
-        autocommit=True
-    )
-
-
-connection = connect_db()
-
 
 def generate_concerts():
     concerts_list = []
@@ -54,6 +43,4 @@ def generate_concerts():
     return concerts_list
 
 
-# calling functions
-airports = generate_airports()
 concerts = generate_concerts()
