@@ -7,7 +7,7 @@ def genre_request():
         response = requests.get(request)
         if response.status_code == 200:
             response_json = response.json()
-            print(response_json)
+            # print(response_json)
             return response_json
         elif response.status_code == 404:
             print(f"Hakua ei voitu suorittaa.\nVirhekoodi: {response.status_code}")

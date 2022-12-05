@@ -1,7 +1,7 @@
 import random
 import mysql.connector
-from airport_class import Airport
-
+from airport_class import generate_airports
+from random_genre_request import genre_request
 
 
 class Concert:
@@ -34,26 +34,26 @@ def connect_db():
 
 connection = connect_db()
 
-airports = []
-sql = f"SELECT ident, latitude_deg, longitude_deg, name FROM airport where type='large_airport' "
-cursor = connection.cursor()
-cursor.execute(sql)
-res = cursor.fetchall
-for airport_data in res():
-    airports.append(Airport(airport_data[0], airport_data[1], airport_data[2], airport_data[3]))
 
-concerts = []
-default_genres = ["Rock", "Pop", "Jazz", "Country", "Metal", "Rap"]
-while len(concerts) != 6:
-    rnd_airport_num = random.randint(0, len(airports) - 1)
-    if not airports[rnd_airport_num].concert_here:
-        genre = genre_request()
-        if genre is None:  # Tän vois ehkä tehdä paremmin
-            for default_genre in default_genres:
-                if not airports[rnd_airport_num].concert_here:
-                    airports[rnd_airport_num].concert_here = True
-                    concerts.append(Concert(default_genre, airports[rnd_airport_num].icao))
+def generate_concerts():
+    concerts_list = []
+    default_genres = ["Rock", "Pop", "Jazz", "Country", "Metal", "Rap"]
+    while len(concerts_list) != 6:
+        rnd_int = random.randint(0, len(airports) - 1)
+        if not airports[rnd_int].concert_here:
+            airports[rnd_int].concert_here = True
+            genre = genre_request()
+            if genre is None:
+                for default in default_genres:
+                    concerts_list.append(Concert(default, airports[rnd_int].icao))
+            else:
+                concerts_list.append(Concert(genre, airports[rnd_int].icao))
+    # Testing
+    for i in concerts_list:
+        print(f"ICAO :{i.icao}\nPRICE: {i.price}\nCONCERT OVER: {i.concert_over}\nGENRE: {i.genre}\n")
+    return concerts_list
 
-        else:
-            airports[rnd_airport_num].concert_here = True
-            concerts.append(Concert(genre, airports[rnd_airport_num].icao))
+
+# calling functions
+airports = generate_airports()
+concerts = generate_concerts()
