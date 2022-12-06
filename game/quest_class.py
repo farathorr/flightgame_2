@@ -1,4 +1,6 @@
-
+from connection import connection
+import random
+import geopy
 
 def generate_starting_quests():
     class Quest:
