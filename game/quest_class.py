@@ -40,22 +40,36 @@ def generate_quest_class(airport_list, current_location, turn):
     return quest1, quest2, quest3
 
 
-def check_quests(c_q1, c_q2, c_q3, a_q1, a_q2, a_q3, passenger_lvl):
-    a_q_list = [a_q1, a_q2, a_q3]
+# def check_quests(c_q1, c_q2, c_q3, a_q1, a_q2, a_q3, passenger_lvl):
+#     a_q_list = [a_q1, a_q2, a_q3]
+#     current_passenger_level = get_mod(passenger_lvl, 'Passenger')
+#     questinput = int(input(
+#         f"1. {a_q1.passenger_amount} matkustajalle lentokentälle: {a_q1.name}. Palkkio: {a_q1.reward}€\n2. {a_q2.passenger_amount} matkustajalle lentokentälle: {a_q2.name}. Palkkio: {a_q2.reward}€\n3. {a_q3.passenger_amount} matkustajalle lentokentälle: {a_q3.name}. Palkkio: {a_q3.reward}€"))
+#     if questinput == 1 or questinput == 2 or questinput == 3:
+#         if c_q1.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
+#             c_q1 = a_q_list[questinput - 1]
+#         elif c_q2.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
+#             c_q2 = a_q_list[questinput - 1]
+#         elif c_q3.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
+#             c_q3 = a_q_list[questinput - 1]
+#         else:
+#             print("Tehtävälista on täynnä.")
+#     else:
+#         print("Tehtävää ei hyväksytty.")
+#     return c_q1, c_q2, c_q3
+
+
+# Check for singular quest. Gets rid of input
+def check_quest(c_q1, c_q2, c_q3, a_q, passenger_lvl):
     current_passenger_level = get_mod(passenger_lvl, 'Passenger')
-    questinput = int(input(
-        f"1. {a_q1.passenger_amount} matkustajalle lentokentälle: {a_q1.name}. Palkkio: {a_q1.reward}€\n2. {a_q2.passenger_amount} matkustajalle lentokentälle: {a_q2.name}. Palkkio: {a_q2.reward}€\n3. {a_q3.passenger_amount} matkustajalle lentokentälle: {a_q3.name}. Palkkio: {a_q3.reward}€"))
-    if questinput == 1 or questinput == 2 or questinput == 3:
-        if c_q1.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
-            c_q1 = a_q_list[questinput - 1]
-        elif c_q2.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
-            c_q2 = a_q_list[questinput - 1]
-        elif c_q3.name == "" and current_passenger_level >= a_q_list[questinput - 1].passenger_amount:
-            c_q3 = a_q_list[questinput - 1]
-        else:
-            print("Tehtävälista on täynnä.")
+    if c_q1.name == "" and current_passenger_level >= a_q.passenger_amount:
+        c_q1 = a_q
+    elif c_q2.name == "" and current_passenger_level >= a_q.passenger_amount:
+        c_q2 = a_q
+    elif c_q3.name == "" and current_passenger_level >= a_q.passenger_amount:
+        c_q3 = a_q
     else:
-        print("Tehtävää ei hyväksytty.")
+        print("Tehtävälista on täynnä.")
     return c_q1, c_q2, c_q3
 
 
@@ -108,7 +122,11 @@ current_quest1, current_quest2, current_quest3, blank_quest = generate_starting_
 # Generating new quests
 a_quest1, a_quest2, a_quest3 = generate_quest_class(airports, location_now, turn)
 
-# Checking quests
+# Check if quest is acceptable
+target_quest = ""
+current_quest1, current_quest2, current_quest3 = check_quest(current_quest1, current_quest2, current_quest3, target_quest)
+
+# Checking quests (not used)
 current_quest1, current_quest2, current_quest3 = check_quests(current_quest1, current_quest2, current_quest3, a_quest1, a_quest2, a_quest3, passenger_level)
 
 # Checking if quests have failed
