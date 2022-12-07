@@ -24,7 +24,7 @@ def get_airport_data(icao):
     try:
         airport = get_data(icao)
         response_json = json.dumps(
-            {"concert status": airport.concert_here, "quest status": airport.quest_here, "icao": airport.icao,
+            {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
