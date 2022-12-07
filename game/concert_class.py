@@ -38,8 +38,8 @@ def generate_concerts():
             else:
                 concerts_list.append(Concert(genre, airports[rnd_int].icao))
     # Testing
-    for i in concerts_list:
-        print(f"ICAO :{i.icao}\nPRICE: {i.price}\nCONCERT OVER: {i.concert_over}\nGENRE: {i.genre}\n")
+    # for i in concerts_list:
+    #     print(f"ICAO :{i.icao}\nPRICE: {i.price}\nCONCERT OVER: {i.concert_over}\nGENRE: {i.genre}\n")
     return concerts_list
 
 

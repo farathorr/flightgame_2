@@ -2,8 +2,9 @@ from connection import connection
 
 
 class Airport:
-    def __init__(self, icao, lat, lon, name, concert_here=False, ):
+    def __init__(self, icao, lat, lon, name, concert_here=False, quest_here=False):
         self.concert_here = concert_here
+        self.quest_here = quest_here
         self.icao = icao
         self.latitude = lat
         self.longitude = lon
@@ -20,9 +21,7 @@ def generate_airports():
     for airport_data in res():
         airports_list.append(Airport(airport_data[0], airport_data[1], airport_data[2], airport_data[3]))
     # TEST
-    for i in airports_list:
-        print(
-            f"CONCERT HERE: {i.concert_here}\nICAO: {i.icao}\nNAME: {i.name}\nLONGITUDE: {i.longitude}\nLATITUDE: {i.latitude}\n")
+    # for i in airports_list:
+    #     print(
+    #         f"CONCERT HERE: {i.concert_here}\nICAO: {i.icao}\nNAME: {i.name}\nLONGITUDE: {i.longitude}\nLATITUDE: {i.latitude}\n")
     return airports_list
-
-
