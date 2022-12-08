@@ -31,7 +31,7 @@ const magentaIcon = L.divIcon({className: 'magenta-icon'}); // For Quest + Conce
 //   gameSetup(`${apiUrl}newgame?player=${playerName}&loc=${startLoc}`);
 // });
 
-gameSetup(`${apiUrl}/airport/${startLoc}`);
+gameSetup(`${apiUrl}/airport/${startLoc}`); // add starting quests
 
 // function to fetch data from API
 async function getData(url) {
@@ -41,8 +41,33 @@ async function getData(url) {
     return data;
 }
 
-// function to add starting markers
+// function to call starting quests // set values after getting data!
+function startingQuests(){
+    getData(`${apiUrl} starting quest url here!`)
+}
 
+// function to generate available quests
+function generateNewQuests(){
+    getData(`${apiUrl} generate quests url here!`)
+}
+
+// function to get quest // hide the questbutton upon success to prevent duplicate quest accepts
+function getQuest(questbutton_value, quests){
+    let quest = quests[questbutton_value]
+    getData(`${apiUrl} getQuest url!`)
+}
+
+// function to complete quests // quest1, quest2, quest3, flight_destination, current_money
+function questComplete (airport, quests) {
+    if (airport.quest_status === true) {
+        getData(`${apiUrl} checkquest url here!`)
+    }
+}
+
+// function to check if quest failed
+function checkIfQuestFailed(turn, quests, failed_quests){
+    getData(`${apiUrl} check if quest failed url`)
+}
 
 // function to update game status
 function updateStatus(status) {
@@ -51,6 +76,8 @@ function updateStatus(status) {
     document.querySelector('#budget').innerHTML = status.co2.budget;
     document.querySelector('#money').innerHTML = status.money;
     document.querySelector('#turn').innerHTML = status.turn;
+    document.querySelector('#co2_level').innerHTML = status.co2_level;
+    document.querySelector('#passenger_capacity').innerHTML = status.passenger_capacity;
 }
 
 // function to show weather at selected airport
@@ -63,13 +90,15 @@ function updateStatus(status) {
 // }
 
 // function to find index of icao
-
 function getIndex(array, value) {
     return array.findIndex(obj => obj.icao === value)
 }
 
+// function to complete concert
+function completeConcert(){
+    getData(`${apiUrl} complete concert url!`)
+}
 // function to check if concert active in location
-
 function checkForConcert(airport, concerts) {
     if (airport.concert_status === true) {
         let concert = concerts[getIndex(concerts, airport.icao)]
@@ -78,7 +107,7 @@ function checkForConcert(airport, concerts) {
             let balance_check = (gamedata.status.money >= concert.price)
             if (balance_check === true) {
                 checkConcerts(concert.genre)
-                concert.concert_over = true
+                completeConcert() // check what values needed
                 updateConcerts(concerts)
             } else {
                 prompt('Rahasi eivät riitä konserttirannekkeeseen.')
@@ -120,7 +149,7 @@ function updateConcerts(concerts) {
 }
 
 // function to check if game is over
-function checkGameOver(budget) {
+function checkGameOver(budget, quest_failed) {
     if (budget <= 0) {
         alert(`Game Over. ${concerts.length} goals reached.`);
         return false;
@@ -139,6 +168,7 @@ async function gameSetup(url) {
         updateStatus(gameData.status);
         if (!checkGameOver(gameData.status.co2.budget)) return;
         checkForConcert(gameData.airport.icao,)
+        generateNewQuests()
         for (let airport of gameData.location) {
             const marker = L.marker([airport.latitude, airport.longitude]).addTo(map);
             airportMarkers.addLayer(marker);
@@ -146,6 +176,8 @@ async function gameSetup(url) {
                 map.flyTo([airport.latitude, airport.longitude], 10);
                 // showWeather(airport);
                 checkForConcert(airport.icao, concerts.genre);
+                questComplete(airport.icao, quests)
+                checkIfQuestFailed(gameData.turn, quests, gameData.failed_quests)
                 marker.bindPopup(`You are here: <b>${airport.name}</b>`);
                 marker.openPopup();
                 marker.setIcon(greenIcon);
@@ -240,3 +272,24 @@ function hideconsert() {
         x.style.display = "none";
     } else x.style.display = "none";
 }
+
+// Quest Buttons and button functions
+const questbutton1 = document.querySelector(#questbutton1)
+const questbutton2 = document.querySelector(#questbutton2)
+const questbutton3 = document.querySelector(#questbutton3)
+
+function qbutton1Function(quests){
+    let value = 0
+    getQuest(value, quests)
+}
+function qbutton2Function(quests){
+    let value = 1
+    getQuest(value, quests)
+}
+function qbutton3Function(quests){
+    let value = 2
+    getQuest(value, quests)
+}
+questbutton1.addEventListener("click", qbutton1Function(quests))
+questbutton2.addEventListener("click", qbutton2Function(quests))
+questbutton3.addEventListener("click", qbutton3Function(quests))
