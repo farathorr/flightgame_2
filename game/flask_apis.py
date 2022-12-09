@@ -2,7 +2,7 @@ from flask import Flask, request, Response, json
 from flask_cors import CORS
 from airport_class import generate_airports, Airport
 from concert_class import generate_concerts, Concert
-from quest_class import *
+# from quest_class import *
 from game_class import Game
 from geopy.distance import geodesic as GD
 
@@ -21,30 +21,47 @@ def get_data(icao):
             return airport
 
 
-
-@app.route("/flyto/<icao>")
-def fly(icao):
+@app.route("/start/")
+def start_game():
     try:
-
+        game = Game()
+        print(game.id)
         response_json = json.dumps(
-            {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
-             "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
+            {"id": game.id, "money": game.money, "co2 budget": game.co2_budget,
+             "co2 consumed": game.co2_consumed, "quests failed":
+                 game.failed_quests, "concerts watched": game.concerts_watched,
+             "current latitude": game.location.latitude, "current longitude": game.location.longitude, "current icao":
+                 game.location.icao})
+        print(response_json)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
-        response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
+        response_json = json.dumps({"message": "invalid parameters", "status": "400 Bad request"})
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
-@app.route("/starting_quests")
-def get_starting_quests():
-    try:
-        quest1, quest2, quest3, blank_quest = generate_starting_quests()
-        Quests = quest1, quest2, quest3, blank_quest
-        response_json = json.dumps(Quests)
-        return Response(response=response_json, status=200, mimetype="application/json")
-    except TypeError:
-        response_json = json.dumps({"message": "unknown error occured", "status": "400 Bad request"})
-        return Response(response=response_json, status=400, mimetype="application/json")
+# @app.route("/flyto/<icao>")
+# def fly(icao):
+#     try:
+#
+#         response_json = json.dumps(
+#             {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
+#              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
+#         return Response(response=response_json, status=200, mimetype="application/json")
+#     except TypeError:
+#         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
+#         return Response(response=response_json, status=400, mimetype="application/json")
+
+
+# @app.route("/starting_quests")
+# def get_starting_quests():
+#     try:
+#         quest1, quest2, quest3, blank_quest = generate_starting_quests()
+#         Quests = quest1, quest2, quest3, blank_quest
+#         response_json = json.dumps(Quests)
+#         return Response(response=response_json, status=200, mimetype="application/json")
+#     except TypeError:
+#         response_json = json.dumps({"message": "unknown error occured", "status": "400 Bad request"})
+#         return Response(response=response_json, status=400, mimetype="application/json")
 
 
 @app.errorhandler(404)

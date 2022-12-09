@@ -21,6 +21,3 @@ class Plane:
         return result
 
 
-plane = Plane(1, 1)
-print(plane.co2level)
-plane.get_co2mod()

@@ -1,4 +1,6 @@
 from connection import connection
+import random
+from geopy.distance import geodesic as gd
 
 
 class Airport:
@@ -9,6 +11,27 @@ class Airport:
         self.latitude = lat
         self.longitude = lon
         self.name = name
+
+    def generate_quest_class(self, airport_list, turn):
+        cur_loc_coords = self.latitude, self.longitude
+        name = self.name
+
+        class Quest:
+
+            def __init__(self, passenger_amount):
+                self.location = airport_list[random.randint(0, 446)]
+                self.name = name
+                self.location_coords = self.location.latitude, self.location.longitude
+                self.passenger_amount = passenger_amount
+                self.reward = round(
+                    int(gd(cur_loc_coords, self.location.latitude,
+                           self.location.longitude) * 0.25 * self.passenger_amount), -2)
+                self.turn = turn + 3
+
+        quest1 = Quest(1)
+        quest2 = Quest(random.randint(1, 3))
+        quest3 = Quest(random.randint(1, 3))
+        return quest1, quest2, quest3
 
 
 # airport generation
