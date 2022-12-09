@@ -3,7 +3,8 @@ from flask_cors import CORS
 from airport_class import generate_airports, Airport
 from concert_class import generate_concerts, Concert
 from quest_class import *
-from connection import connection
+from game_class import Game
+from geopy.distance import geodesic as GD
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -20,10 +21,11 @@ def get_data(icao):
             return airport
 
 
-@app.route("/airport/<icao>")
-def get_airport_data(icao):
+
+@app.route("/flyto/<icao>")
+def fly(icao):
     try:
-        airport = get_data(icao)
+
         response_json = json.dumps(
             {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
