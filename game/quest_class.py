@@ -1,6 +1,9 @@
 from connection import connection
 import random
 import geopy
+from airport_class import generate_airports
+from game_class import Game
+
 
 def generate_starting_quests():
     class Quest:
@@ -110,7 +113,7 @@ def check_quest_if_quest_failed(turn, quest1, quest2, quest3, failed_quests):
 
 # Examples
 
-airports = get_airports()
+airports = generate_airports()
 turn = 1
 passenger_level = 0
 failed_quests = 0
@@ -124,10 +127,15 @@ a_quest1, a_quest2, a_quest3 = generate_quest_class(airports, location_now, turn
 
 # Check if quest is acceptable
 target_quest = ""
-current_quest1, current_quest2, current_quest3 = check_quest(current_quest1, current_quest2, current_quest3, target_quest)
+current_quest1, current_quest2, current_quest3 = check_quest(current_quest1, current_quest2, current_quest3,
+                                                             target_quest)
 
 # Checking quests (not used)
-current_quest1, current_quest2, current_quest3 = check_quests(current_quest1, current_quest2, current_quest3, a_quest1, a_quest2, a_quest3, passenger_level)
+current_quest1, current_quest2, current_quest3 = check_quests(current_quest1, current_quest2, current_quest3, a_quest1,
+                                                              a_quest2, a_quest3, passenger_level)
 
 # Checking if quests have failed
-current_quest1, current_quest2, current_quest3, failed_quests = check_quest_if_quest_failed(turn, current_quest1, current_quest2, current_quest3, failed_quests)
+current_quest1, current_quest2, current_quest3, failed_quests = check_quest_if_quest_failed(turn, current_quest1,
+                                                                                            current_quest2,
+                                                                                            current_quest3,
+                                                                                            failed_quests)

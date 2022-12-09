@@ -22,6 +22,8 @@ class Game:
         self.concerts_watched = 0
         self.location = airports[random.randint(0, 446)]
         self.plane = Plane()
+        # self.turn = 1
+        # self.quests
 
     def flyto(self, icao):
         dest = get_data(icao)
@@ -30,7 +32,3 @@ class Game:
         self.location = dest
         self.co2_consumed += consumption
 
-
-game = Game()
-print(game.location.icao)
-print(game.id)
