@@ -2,7 +2,9 @@ from flask import Flask, request, Response, json
 from flask_cors import CORS
 from airport_class import generate_airports, Airport
 from concert_class import generate_concerts, Concert
-from connection import connection
+from quest_class import *
+from game_class import Game
+from geopy.distance import geodesic as GD
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -19,16 +21,29 @@ def get_data(icao):
             return airport
 
 
-@app.route("/airport/<icao>")
-def get_airport_data(icao):
+
+@app.route("/flyto/<icao>")
+def fly(icao):
     try:
-        airport = get_data(icao)
+
         response_json = json.dumps(
             {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/starting_quests")
+def get_starting_quests():
+    try:
+        quest1, quest2, quest3, blank_quest = generate_starting_quests()
+        Quests = quest1, quest2, quest3, blank_quest
+        response_json = json.dumps(Quests)
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "unknown error occured", "status": "400 Bad request"})
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
