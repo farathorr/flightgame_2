@@ -4,6 +4,7 @@ import geopy
 from airport_class import generate_airports
 from game_class import Game
 
+# THIS FILE IS OUTDATED AND REDUNDANT FOR NOW
 
 def generate_starting_quests():
     class Quest:
