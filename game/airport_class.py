@@ -1,37 +1,35 @@
 from connection import connection
 import random
-from geopy.distance import geodesic as gd
+from geopy import distance
 
 
 class Airport:
-    def __init__(self, icao, lat, lon, name, concert_here=False, quest_here=False):
+    def __init__(self, icao, lat, lon, name, concert_here=False, quest_dest=False):
         self.concert_here = concert_here
-        self.quest_here = quest_here
+        self.quest_dest = quest_dest
         self.icao = icao
         self.latitude = lat
         self.longitude = lon
         self.name = name
+        self.quests = []
 
-    def generate_quest_class(self, airport_list, turn):
+    def generate_quests(self, turn):
         cur_loc_coords = self.latitude, self.longitude
-        name = self.name
 
         class Quest:
 
             def __init__(self, passenger_amount):
-                self.location = airport_list[random.randint(0, 446)]
-                self.name = name
-                self.location_coords = self.location.latitude, self.location.longitude
+                self.destination = airports[random.randint(0, 446)]
+                self.name = self.destination.name
+                self.icao = self.destination.icao
+                self.destination_coords = self.destination.latitude, self.destination.longitude
                 self.passenger_amount = passenger_amount
                 self.reward = round(
-                    int(gd(cur_loc_coords, self.location.latitude,
-                           self.location.longitude) * 0.25 * self.passenger_amount), -2)
+                    int(distance.distance(cur_loc_coords, self.destination_coords).km * 0.25 * passenger_amount))
                 self.turn = turn + 3
 
-        quest1 = Quest(1)
-        quest2 = Quest(random.randint(1, 3))
-        quest3 = Quest(random.randint(1, 3))
-        return quest1, quest2, quest3
+        for i in range(3):
+            self.quests.append(Quest(i + 1))
 
 
 # airport generation
@@ -48,3 +46,14 @@ def generate_airports():
     #     print(
     #         f"CONCERT HERE: {i.concert_here}\nICAO: {i.icao}\nNAME: {i.name}\nLONGITUDE: {i.longitude}\nLATITUDE: {i.latitude}\n")
     return airports_list
+
+
+airports = generate_airports()
+
+select_airport = airports[random.randint(0, 446)]
+select_airport.generate_quests(1)
+for quest in select_airport.quests:
+    print(
+        f"destination: {quest.destination}\nname: {quest.name}\nicao: {quest.icao}\n"
+        f"dest_coords: {quest.destination_coords}\npassenger_amount: {quest.passenger_amount}\n"
+        f"reward: {quest.reward}\nturn: {quest.turn}\n")

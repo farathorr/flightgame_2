@@ -1,10 +1,6 @@
 from flask import Flask, request, Response, json
 from flask_cors import CORS
-from airport_class import generate_airports, Airport
-from concert_class import generate_concerts, Concert
-# from quest_class import *
-from game_class import Game
-from geopy.distance import geodesic as GD
+from game_class import *
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -13,25 +9,28 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # WIP
 airports = generate_airports()
 concerts = generate_concerts()
+games = []
 
 
-def get_data(icao):
-    for airport in airports:
-        if airport.icao == icao:
-            return airport
+def find_game(game_id):
+    for game in games:
+        if game.id == game_id:
+            return game
 
 
 @app.route("/start/")
 def start_game():
     try:
         game = Game()
+        games.append(game)
+        game.location.generate_quests(game.turn)
         print(game.id)
         response_json = json.dumps(
-            {"id": game.id, "money": game.money, "co2 budget": game.co2_budget,
-             "co2 consumed": game.co2_consumed, "quests failed":
-                 game.failed_quests, "concerts watched": game.concerts_watched,
-             "current latitude": game.location.latitude, "current longitude": game.location.longitude, "current icao":
-                 game.location.icao})
+            {"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
+             "co2_consumed": game.co2_consumed, "quests_failed":
+                 game.failed_quests, "concerts_watched": len(game.concerts_watched),
+             "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
+             "current_icao": game.location.icao})
         print(response_json)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
@@ -39,17 +38,35 @@ def start_game():
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
-# @app.route("/flyto/<icao>")
-# def fly(icao):
-#     try:
-#
-#         response_json = json.dumps(
-#             {"concert_status": airport.concert_here, "quest_status": airport.quest_here, "icao": airport.icao,
-#              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name})
-#         return Response(response=response_json, status=200, mimetype="application/json")
-#     except TypeError:
-#         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
-#         return Response(response=response_json, status=400, mimetype="application/json")
+@app.route("/<game_id>/flyto/<icao>")
+def fly(icao, game_id):
+    try:
+        game = find_game(game_id)
+        game.flyto(icao)
+        game.location.generate_quests(game.turn)
+        airport = game.location
+        response_json = json.dumps(
+            {"concert_status": airport.concert_here, "quest_status": airport.quest_dest, "icao": airport.icao,
+             "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name,
+             "co2 consumed": game.co2_consumed, })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/<game_id>/questcheck/")
+def quest_check(game_id):
+    try:
+        game = find_game(game_id)
+        questlist = game.location.quests
+        response_json = json.dumps({
+            "quest 0": questlist[0].name, "quest 1": questlist[1].name, "quest 2": questlist[2].name
+        })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
 
 
 # @app.route("/starting_quests")
