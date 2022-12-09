@@ -1,6 +1,7 @@
 from flask import Flask, Response, json
 from flask_cors import CORS
 from game_class import *
+# THIS FILE IS OUTDATED AND REDUNDANT FOR NOW
 
 app = Flask(__name__)
 cors = CORS(app)
