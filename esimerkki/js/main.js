@@ -146,26 +146,75 @@ async function gameSetup(url) {
 */
 let tehtava_button = document.getElementById("t_button")
 let konsertti_button = document.getElementById("k_button")
+let valitse_button = document.getElementById("tk_button")
+
+//let paivitys_button = document.getElementById( "p_button")
 tehtava_button.addEventListener("click", hidequest);
 konsertti_button.addEventListener("click", hideconsert);
+valitse_button.addEventListener("click", hidevalitse);
+//paivitys_button.addEventListener("click", hideupgrade)
 
 
 function hidequest() {
-  var x = document.getElementById("myDIV");
-  var y = document.getElementById("tehtava")
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
+  var z = document.getElementById( "myquest");
   if (x.style.display === "none") {
     x.style.display = "block";
     y.style.display = "none";
+    z.style.display = "none";
+
   }
-  else y.style.display = "none";
+    else x.style.display = "block"
+    y.style.display = "none";
+    z.style.display = "none";
+
 }
 
 function hideconsert() {
-  var x = document.getElementById("myDIV");
-  var y = document.getElementById("tehtava")
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
+  var z = document.getElementById( "myquest");
   if (y.style.display === "none") {
     y.style.display = "block";
     x.style.display = "none";
+    z.style.display = "none";
+
   }
-  else x.style.display = "none";
+    else y.style.display = "block"
+      x.style.display = "none"
+      z.style.display = "none"
+
 }
+/*
+function hidevalitse() {
+  var z = document.getElementById( "myquest");
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
+    if (z.style.display === "none") {
+    z.style.display = "block";
+    x.style.display = "none";
+    y.style.display = "none";
+  }
+    else z.style.display = "block"
+      x.style.display = "none"
+      y.style.display = "none"
+
+
+}
+*/
+
+const dialog = document.querySelector('dialog')
+const dialog_img = document.querySelector('dialog img')
+for (let x in picArray) {
+    let article = document.querySelectorAll('article')[x]
+    article.addEventListener('click', function (evt) {
+        dialog_img.setAttribute('src', picArray[x].image.large)
+        dialog_img.setAttribute('alt', picArray[x].title)
+        dialog.showModal()
+    })
+}
+const span = document.querySelector('span')
+span.addEventListener('click', function (evt) {
+    dialog.close()
+})
