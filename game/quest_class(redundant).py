@@ -4,7 +4,7 @@ import geopy
 from airport_class import generate_airports
 from game_class import Game
 
-# THIS FILE IS OUTDATED AND REDUNDANT FOR NOW
+# this file is redundant for now, check airport_class for class Quest
 
 def generate_starting_quests():
     class Quest:
