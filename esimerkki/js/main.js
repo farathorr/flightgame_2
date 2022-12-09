@@ -186,7 +186,7 @@ function hideconsert() {
       z.style.display = "none"
 
 }
-
+/*
 function hidevalitse() {
   var z = document.getElementById( "myquest");
   var x = document.getElementById("tehteva");
@@ -201,4 +201,14 @@ function hidevalitse() {
       y.style.display = "none"
 
 
+}
+*/
+function myFunction() {
+  var txt;
+  if (confirm("Press a button!")) {
+    txt = "You pressed OK!";
+  } else {
+    txt = "You pressed Cancel!";
+  }
+  document.getElementById("demo").innerHTML = txt;
 }
