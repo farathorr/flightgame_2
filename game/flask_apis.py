@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, json
+from flask import Flask, Response, json
 from flask_cors import CORS
 from game_class import *
 
@@ -7,8 +7,6 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # WIP
-airports = generate_airports()
-concerts = generate_concerts()
 games = []
 
 
@@ -18,9 +16,17 @@ def find_game(game_id):
             return game
 
 
+def find_concert(selected_game):
+    for concert in concerts:
+        if concert.icao == selected_game.location.icao:
+            return concert
+
+
 @app.route("/start/")
 def start_game():
     try:
+        generate_airports()
+        generate_concerts()
         game = Game()
         games.append(game)
         game.location.generate_quests(game.turn)
@@ -69,16 +75,50 @@ def quest_check(game_id):
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
-# @app.route("/starting_quests")
-# def get_starting_quests():
-#     try:
-#         quest1, quest2, quest3, blank_quest = generate_starting_quests()
-#         Quests = quest1, quest2, quest3, blank_quest
-#         response_json = json.dumps(Quests)
-#         return Response(response=response_json, status=200, mimetype="application/json")
-#     except TypeError:
-#         response_json = json.dumps({"message": "unknown error occured", "status": "400 Bad request"})
-#         return Response(response=response_json, status=400, mimetype="application/json")
+@app.route("/<game_id>/watch")
+def watch_concert(game_id):
+    try:
+        game = find_game(game_id)
+        game.watch_concert()
+        concert = find_concert(game)
+        response_json = json.dumps(
+            {"concerts_watched": game.concerts_watched, "money": game.money,
+             "concert_here": game.location.concert_here,
+             "concert_over": concert.concert_over
+
+             })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/<game_id>/upgradeco2")
+def upgrade_co2(game_id):
+    try:
+        game = find_game(game_id)
+        game.money = game.plane.upgrade_co2lvl(game.money)
+        response_json = json.dumps({
+            "money": game.money, "co2lvl": game.plane.co2level, "psngrlvl": game.plane.psngrlvl
+        })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/<game_id>/upgradepsngr")
+def upgrade_psngr(game_id):
+    try:
+        game = find_game(game_id)
+        game.money = game.plane.upgrade_psngrlvl(game.money)
+        response_json = json.dumps({
+            "money": game.money, "co2lvl": game.plane.co2level, "psngrlvl": game.plane.psngrlvl
+        })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
 
 
 @app.errorhandler(404)
