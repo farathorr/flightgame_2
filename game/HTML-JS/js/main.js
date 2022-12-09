@@ -31,7 +31,7 @@ const magentaIcon = L.divIcon({className: 'magenta-icon'}); // For Quest + Conce
 //   gameSetup(`${apiUrl}newgame?player=${playerName}&loc=${startLoc}`);
 // });
 
-gameSetup(`${apiUrl}/airport/${startLoc}`); // add starting quests
+gameSetup(`${apiUrl}/start/`); // add starting quests
 
 // function to fetch data from API
 async function getData(url) {
@@ -72,9 +72,9 @@ function checkIfQuestFailed(turn, quests, failed_quests){
 // function to update game status
 function updateStatus(status) {
     // document.querySelector('#player-name').innerHTML = `Player: ${status.name}`;
-    document.querySelector('#consumed').innerHTML = status.co2.consumed;
-    document.querySelector('#budget').innerHTML = status.co2.budget;
-    document.querySelector('#money').innerHTML = status.money;
+    document.querySelector('#consumed').innerHTML = status[1];
+    document.querySelector('#budget').innerHTML = status[0];
+    document.querySelector('#money').innerHTML = status[2];
     document.querySelector('#turn').innerHTML = status.turn;
     document.querySelector('#co2_level').innerHTML = status.co2_level;
     document.querySelector('#passenger_capacity').innerHTML = status.passenger_capacity;
@@ -165,7 +165,9 @@ async function gameSetup(url) {
         airportMarkers.clearLayers();
         const gameData = await getData(url);
         console.log(gameData);
-        updateStatus(gameData.status);
+        let status = [gameData.co2_budget, gameData.co2_consumed, gameData.money]
+        console.log(status)
+        updateStatus(status);
         if (!checkGameOver(gameData.status.co2.budget)) return;
         checkForConcert(gameData.airport.icao,)
         generateNewQuests()
@@ -274,22 +276,22 @@ function hideconsert() {
 }
 
 // Quest Buttons and button functions
-const questbutton1 = document.querySelector(#questbutton1)
-const questbutton2 = document.querySelector(#questbutton2)
-const questbutton3 = document.querySelector(#questbutton3)
-
-function qbutton1Function(quests){
-    let value = 0
-    getQuest(value, quests)
-}
-function qbutton2Function(quests){
-    let value = 1
-    getQuest(value, quests)
-}
-function qbutton3Function(quests){
-    let value = 2
-    getQuest(value, quests)
-}
-questbutton1.addEventListener("click", qbutton1Function(quests))
-questbutton2.addEventListener("click", qbutton2Function(quests))
-questbutton3.addEventListener("click", qbutton3Function(quests))
+// const questbutton1 = document.querySelector(#questbutton1)
+// const questbutton2 = document.querySelector(#questbutton2)
+// const questbutton3 = document.querySelector(#questbutton3)
+//
+// function qbutton1Function(quests){
+//     let value = 0
+//     getQuest(value, quests)
+// }
+// function qbutton2Function(quests){
+//     let value = 1
+//     getQuest(value, quests)
+// }
+// function qbutton3Function(quests){
+//     let value = 2
+//     getQuest(value, quests)
+// }
+// questbutton1.addEventListener("click", qbutton1Function(quests))
+// questbutton2.addEventListener("click", qbutton2Function(quests))
+// questbutton3.addEventListener("click", qbutton3Function(quests))
