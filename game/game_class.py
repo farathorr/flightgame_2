@@ -1,13 +1,10 @@
-import random
-
 import geopy
 
-from airport_class import generate_airports
 from plane_class import Plane
 from geopy import distance
 from concert_class import generate_concerts
+from airport_class import *
 
-airports = generate_airports()
 concerts = generate_concerts()
 
 
@@ -35,7 +32,7 @@ class Game:
         dest_coords = dest.latitude, dest.longitude
         current_coords = self.location.latitude, self.location.longitude
         distance = round(int(geopy.distance.distance(current_coords, dest_coords).km))
-        consumption = distance * self.plane.get_co2mod()[0]
+        consumption = distance * self.plane.get_co2mod()
         self.location = dest
         self.co2_consumed += consumption
         self.turn += 1
@@ -66,14 +63,11 @@ class Game:
 
     def watch_concert(self):
         for concert in concerts:
-            if self.location.icao == concert.icao:
-                self.concerts_watched.append(concert.genre)
-                self.money = concert.watch(self.money)
-
-
-game = Game()
-# print(game.location.name)
-# game.flyto("EFHK")
-# print(game.location.name)
-
-
+            if concert.concert_over:
+                return
+            else:
+                if self.location.icao == concert.icao:
+                    self.concerts_watched.append(concert.genre)
+                    self.money = self.money - concert.price
+                    concert.concert_over = True
+                    self.location.concert_here = False

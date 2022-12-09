@@ -1,27 +1,14 @@
 import random
 from random_genre_request import genre_request
-from airport_class import generate_airports
+from airport_class import *
 
 
 class Concert:
-    def __init__(self, genre, icao, concert_over=False, price=500):
+    def __init__(self, genre, icao):
         self.genre = genre
         self.icao = icao
-        self.concert_over = concert_over
-        self.price = price
-
-    def watch(self, money):
-        self.concert_over = True
-        money = money - self.price
-        for airport in airports:
-            if airport.icao == self.icao:
-                airport.concert_here = False
-                concerts.remove(self)
-        return money
-
-
-
-airports = generate_airports()
+        self.concert_over = False
+        self.price = 500
 
 
 # concert generation
@@ -43,6 +30,3 @@ def generate_concerts():
     for i in concerts_list:
         print(f"ICAO :{i.icao}\nPRICE: {i.price}\nCONCERT OVER: {i.concert_over}\nGENRE: {i.genre}\n")
     return concerts_list
-
-
-concerts = generate_concerts()

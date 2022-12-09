@@ -4,9 +4,9 @@ from geopy import distance
 
 
 class Airport:
-    def __init__(self, icao, lat, lon, name, concert_here=False, quest_dest=False):
-        self.concert_here = concert_here
-        self.quest_dest = quest_dest
+    def __init__(self, icao, lat, lon, name):
+        self.concert_here = False
+        self.quest_dest = False
         self.icao = icao
         self.latitude = lat
         self.longitude = lon
@@ -50,10 +50,10 @@ def generate_airports():
 
 airports = generate_airports()
 
-select_airport = airports[random.randint(0, 446)]
-select_airport.generate_quests(1)
-for quest in select_airport.quests:
-    print(
-        f"destination: {quest.destination}\nname: {quest.name}\nicao: {quest.icao}\n"
-        f"dest_coords: {quest.destination_coords}\npassenger_amount: {quest.passenger_amount}\n"
-        f"reward: {quest.reward}\nturn: {quest.turn}\n")
+# select_airport = airports[random.randint(0, 446)]
+# select_airport.generate_quests(1)
+# for quest in select_airport.quests:
+#     print(
+#         f"destination: {quest.destination}\nname: {quest.name}\nicao: {quest.icao}\n"
+#         f"dest_coords: {quest.destination_coords}\npassenger_amount: {quest.passenger_amount}\n"
+#         f"reward: {quest.reward}\nturn: {quest.turn}\n")
