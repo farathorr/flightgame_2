@@ -204,10 +204,17 @@ function hidevalitse() {
 }
 */
 
-function on() {
-document.getElementById("overlay").style.display = "block";
+const dialog = document.querySelector('dialog')
+const dialog_img = document.querySelector('dialog img')
+for (let x in picArray) {
+    let article = document.querySelectorAll('article')[x]
+    article.addEventListener('click', function (evt) {
+        dialog_img.setAttribute('src', picArray[x].image.large)
+        dialog_img.setAttribute('alt', picArray[x].title)
+        dialog.showModal()
+    })
 }
-
-function off() {
-document.getElementById("overlay").style.display = "none";
-}
+const span = document.querySelector('span')
+span.addEventListener('click', function (evt) {
+    dialog.close()
+})
