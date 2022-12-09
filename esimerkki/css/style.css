@@ -14,16 +14,17 @@
   border-radius: 4px;
   text-align: center;
   transition: all 300ms;
+  gap: 3rem;
 }
 #t_button{
-  margin-left: 2rem;
+  margin-left: 1rem;
   width:auto;
 }
 #k_button{
    width:auto;
 }
 #tk_button{
-  margin-left: 7rem;
+   margin-left: 3rem;
   width:auto;
 
 }
@@ -319,12 +320,12 @@ button{
   width: auto;
 }
 
-#myDIV{
+#tehteva{
   display: none;
   width: auto;
 }
 
-#tehtava{
+#genret{
   display: block;
   width: auto;
 

@@ -156,20 +156,24 @@ valitse_button.addEventListener("click", hidevalitse);
 
 
 function hidequest() {
-  var x = document.getElementById("myDIV");
-  var y = document.getElementById("tehtava");
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
   var z = document.getElementById( "myquest");
   if (x.style.display === "none") {
     x.style.display = "block";
     y.style.display = "none";
     z.style.display = "none";
+
   }
+    else x.style.display = "block"
+    y.style.display = "none";
+    z.style.display = "none";
 
 }
 
 function hideconsert() {
-  var x = document.getElementById("myDIV");
-  var y = document.getElementById("tehtava");
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
   var z = document.getElementById( "myquest");
   if (y.style.display === "none") {
     y.style.display = "block";
@@ -177,18 +181,24 @@ function hideconsert() {
     z.style.display = "none";
 
   }
-  else x.style.display = "none";
+    else y.style.display = "block"
+      x.style.display = "none"
+      z.style.display = "none"
 
 }
 
 function hidevalitse() {
   var z = document.getElementById( "myquest");
-  var x = document.getElementById("myDIV");
-  var y = document.getElementById("tehtava");
+  var x = document.getElementById("tehteva");
+  var y = document.getElementById("genret");
     if (z.style.display === "none") {
     z.style.display = "block";
     x.style.display = "none";
     y.style.display = "none";
   }
+    else z.style.display = "block"
+      x.style.display = "none"
+      y.style.display = "none"
+
 
 }
