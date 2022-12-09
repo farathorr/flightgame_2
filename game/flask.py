@@ -2,6 +2,7 @@ from flask import Flask, request, Response, json
 from flask_cors import CORS
 from airport_class import generate_airports, Airport
 from concert_class import generate_concerts, Concert
+from quest_class import *
 from connection import connection
 
 app = Flask(__name__)
@@ -29,6 +30,18 @@ def get_airport_data(icao):
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/starting_quests")
+def get_starting_quests():
+    try:
+        quest1, quest2, quest3, blank_quest = generate_starting_quests()
+        Quests = quest1, quest2, quest3, blank_quest
+        response_json = json.dumps(Quests)
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "unknown error occured", "status": "400 Bad request"})
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
