@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"/>
     <link href="css/style.css" rel="stylesheet">
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons/dist/ionicons/ionicons.esm.js" defer></script>
@@ -15,211 +15,183 @@
 </head>
 
 <body>
-    <div class="container">
-        <header class="page-header">
-            <h1 class="page-title">
-                <ion-icon name="airplane-outline"></ion-icon>&nbsp;Top&nbsp;Gun&nbsp;<ion-icon name="airplane-outline"></ion-icon>
-            </h1>
+<div class="container">
+    <header class="page-header">
+        <h1 class="page-title">
+            <ion-icon name="airplane-outline"></ion-icon>&nbsp;Top&nbsp;Gun&nbsp;<ion-icon
+                name="airplane-outline"></ion-icon>
+        </h1>
 
-            <nav>
-                <ul class="flex-wrap space-evenly">
-                    <li>
-                        <a class="button button-white" href="index.html">Game</a>
-                    </li>
-                    <li>
-                        <a class="button button-white" href="about.html">About</a>
-                    </li>
+        <nav>
+            <ul class="flex-wrap space-evenly">
+                <li>
+                    <a class="button button-white" href="index.html">Game</a>
+                </li>
+                <li>
+                    <a class="button button-white" href="about.html">About</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="flex-wrap">
+        <div id="map">
+            <!-- <img class="responsive-img" src="img/finland.svg" alt="map of finland"> -->
+        </div>
+        <div class="boxes">
+            <section class="box">
+                <header>
+                    <h2>Game Status</h2>
+                </header>
+                <table>
+                    <tr>
+                        <td><img src="img/pilvi.png" alt="Goal weather icon"> CO2 Käytetty: <span
+                                id="consumed">999</span>kg
+                        </td>
+                        <td><img src="img/lippu.png" alt="Goal weather icon">Vuoro: <span id="turn">99</span></td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/pilvi.png" alt="Goal weather icon">CO2 Budejtti: <span id="budget">9999</span>kg
+                        </td>
+                        <td><img src="img/euro.png" alt="Goal weather icon">Rahat: <span id="money">999</span>€</td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/pilvi.png" alt="Goal weather icon">CO2 filtteri taso: <span
+                                id="co_level">1-3</span></td>
+                        <td><img src="img/lippu.png" alt="Goal weather icon">Maksimi matkustajamäärä: <span
+                                id="passenger">1-3</span></td>
+
+                    </tr>
+                </table>
+            </section>
+            <section class="box">
+
+                <header>
+                    <h2 id="airport-name">Airport name</h2>
+                </header>
+                <!--                    <table id="weather">-->
+                <!--                        <tr>-->
+                <!--                            <td>Place name</td>-->
+                <!--                        </tr>-->
+                <!--                        <tr>-->
+                <!--                            <td id="airport-temp">more stuff</td>-->
+                <!--                        </tr>-->
+
+                <!--                    </table>-->
+            </section>
+            <section class="box">
+                <header>
+                    <h2 id="paivitys">Upgrade</h2>
+                </header>
+
+                <ul class="flex-wrap">
+
+                    <button id="paiv" type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/upgrade.png" alt="Goal weather icon">
+                            <figcaption>CO2 filtteri1</figcaption>
+                        </figure>
+                    </button>
+
+                    <button id="paiv" type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/upgrade.png" alt="Goal weather icon">
+                            <figcaption>tilavuus2</figcaption>
+                        </figure>
+                    </button>
+
+
                 </ul>
-            </nav>
-        </header>
-
-        <main class="flex-wrap">
-            <div id="map">
-                <!-- <img class="responsive-img" src="img/finland.svg" alt="map of finland"> -->
-            </div>
-            <div class="boxes">
-                <section class="box">
-                    <header>
-                        <h2>Game Status</h2>
-                    </header>
-                    <table>
-                        <tr>
-                            <td> <img src="img/pilvi.png" alt="Goal weather icon"> CO2 Käytetty: <span id="consumed">999</span>kg</td>
-                           <td> <img src="img/lippu.png" alt="Goal weather icon">Vuoro: <span id="turn">99</span></td>
-                        </tr>
-                        <tr>
-                             <td> <img src="img/pilvi.png" alt="Goal weather icon">CO2 Budejtti: <span id="budget">9999</span>kg</td>
-                            <td> <img src="img/euro.png" alt="Goal weather icon">Rahat: <span id="money">999</span>€</td>
-                        </tr>
-                        <tr>
-                            <td> <img src="img/pilvi.png" alt="Goal weather icon">CO2 filtteri taso: <span id="co_level">1-3</span></td>
-                            <td> <img src="img/lippu.png" alt="Goal weather icon">matkustaja taso: <span id="passenger">1-3</span></td>
-
-                        </tr>
-                    </table>
-                </section>
-                <section class="box">
-
-                    <header>
-                        <h2 id="airport-name">Airport name</h2>
-                    </header>
-                    <table id="weather">
-                        <tr>
-                            <td>Place name</td>
-                        </tr>
-                        <tr>
-                            <td id="airport-temp">more stuff</td>
-                        </tr>
-
-                    </table>
-                </section>
-                      <section  class="box">
-                          <header>
-                        <h2 id="paivitys">Upgrade</h2>
-                        </header>
-
-                    <ul class="flex-wrap">
-
-                        <button id="paiv" type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/upgrade.png" alt="Goal weather icon">
-                                <figcaption>CO2 filtteri1</figcaption>
-                            </figure>
-                        </button>
-
-                        <button id="paiv" type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/upgrade.png" alt="Goal weather icon">
-                                <figcaption>tilavuus2</figcaption>
-                            </figure>
-                        </button>
-
-
-                    </ul>
-                </section>
-                    <header>
-                        <div class="btn-group">
-                          <button id="t_button">Tehtävät</button>
-                          <button id="k_button">Konserit</button>
-                          <button id="tk_button" onclick="()">valitse tehtävä</button>
-
-                        </div>
-                    </header>
-
-                <section id="genret" class="box">
-
-
-                    <ul  id="goals" class="flex-wrap">
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre1</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre4</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre2</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre5</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre3</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/music.png" alt="Goal weather icon">
-                                <figcaption>Genre6</figcaption>
-                            </figure>
-                        </button>
-                    </ul>
-                </section>
-
-                    <section id="tehteva" class="box2" >
-
-                    <ul class="flex-wrap">
-
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption>Tehtävä1</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption>Tehtävä2</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption>Tehtävä3</figcaption>
-                            </figure>
-                        </button>
-                    </ul>
-                    </section>
-                <div>
-                    <dialog>
-                        <span>
-                            <section id="myquest" class="box2" >
-                    <ul class="flex-wrap">
-
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption> Valitse Tehtävä1</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption> Valitse Tehtävä2</figcaption>
-                            </figure>
-                        </button>
-                        <button type="button" onclick="alert('Hello world!')">
-                            <figure>
-                                <img src="img/qest.png" alt="Goal weather icon">
-                                <figcaption> Valitse Tehtävä3</figcaption>
-                            </figure>
-                        </button>
-                    </ul>
-                    </section>
-                        </span>
-
-                    </dialog>
-
+            </section>
+            <header>
+                <div class="btn-group">
+                    <button id="t_button">Tehtävät</button>
+                    <button id="k_button">Konserit</button>
+                    <button id="tk_button">valitse tehtävä</button>
 
                 </div>
+            </header>
+
+            <section id="genret" class="box">
 
 
+                <ul id="goals" class="flex-wrap">
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre1</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre4</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre2</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre5</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre3</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/music.png" alt="Goal weather icon">
+                            <figcaption>Genre6</figcaption>
+                        </figure>
+                    </button>
+                </ul>
+            </section>
+
+            <section id="tehtava" class="box2">
+
+                <ul class="flex-wrap">
+
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/qest.png" alt="Goal weather icon">
+                            <figcaption>Tehtävä1</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/qest.png" alt="Goal weather icon">
+                            <figcaption>Tehtävä2</figcaption>
+                        </figure>
+                    </button>
+                    <button type="button" onclick="alert('Hello world!')">
+                        <figure>
+                            <img src="img/qest.png" alt="Goal weather icon">
+                            <figcaption>Tehtävä3</figcaption>
+                        </figure>
+                    </button>
+                </ul>
+            </section>
 
 
-        </main>
-        <footer class="page-footer">
-            <p>I made this!</p>
-        </footer>
-        <div class="goal hide">
-            <h2>Gooooool!!!</h2>
-            <p>
-                <span id="goal-txt">Goals reached!!</span>
-            </p>
-        </div>
+    </main>
+    <footer class="page-footer">
+        <p>I made this!</p>
+    </footer>
+    <div class="goal hide">
+        <h2>Gooooool!!!</h2>
+        <p>
+            <span id="goal-txt">Goals reached!!</span>
+        </p>
     </div>
+</div>
 <!--
     <div id="player-modal">
         <form id="player-form">
@@ -228,6 +200,32 @@
         </form>
     </div>
 -->
+<dialog>
+    <span id="modalX">&#x2715;</span>
+    <!--    <section id="myquest" class="box2">-->
+    <ul class="flex-wrap">
+
+        <button type="button" id="aq1button" value="0">
+            <figure>
+                <img src="img/qest.png" alt="Goal weather icon">
+                <figcaption id="aq1"> Valitse Tehtävä1</figcaption>
+            </figure>
+        </button>
+        <button type="button" id="aq2button" value="1">
+            <figure>
+                <img src="img/qest.png" alt="Goal weather icon">
+                <figcaption id="aq2"> Valitse Tehtävä2</figcaption>
+            </figure>
+        </button>
+        <button type="button" id="aq3button" value="2">
+            <figure>
+                <img src="img/qest.png" alt="Goal weather icon">
+                <figcaption id="aq3"> Valitse Tehtävä3</figcaption>
+            </figure>
+        </button>
+    </ul>
+    <!--    </section>-->
+</dialog>
 </body>
 
 </html>
