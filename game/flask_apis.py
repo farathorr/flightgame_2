@@ -36,7 +36,7 @@ def start_game():
              "co2_consumed": game.co2_consumed, "quests_failed":
                  game.failed_quests, "concerts_watched": len(game.concerts_watched),
              "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
-             "current_icao": game.location.icao})
+             "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level, "current_passengerlvl": game.plane.psngrlvl})
         print(response_json)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
