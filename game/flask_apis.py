@@ -66,9 +66,30 @@ def quest_check(game_id):
     try:
         game = find_game(game_id)
         questlist = game.location.quests
-        response_json = json.dumps({
-            "quest 0": questlist[0].name, "quest 1": questlist[1].name, "quest 2": questlist[2].name
-        })
+        response = []
+        # To see contents
+        # for i in questlist:
+        #     name = i.name
+        #     icao = i.icao
+        #     destination_coords = i.destination_coords
+        #     passenger_amount = i.passenger_amount
+        #     reward = i.reward
+        #     turn = i.turn
+        #     print(
+        #         f"Quest:\n Name: {name}\n Icao: {icao}\n "
+        #         f"Destination coodinates: {destination_coords}\n Passenger amount: {passenger_amount}\n "
+        #         f"Reward: {reward}\n Turn:{turn}\n")
+        for i in range(3):
+            name = questlist[i].name
+            icao = questlist[i].icao
+            destination_coords = questlist[i].destination_coords
+            passenger_amount = questlist[i].passenger_amount
+            reward = questlist[i].reward
+            turn = questlist[i].turn
+            quest = {"Name": name, "Icao": icao, "Destination_coordinates": destination_coords,
+                          "Passenger_amount": passenger_amount, "Reward": reward, "Turn": turn}
+            response.append(quest)
+        response_json = json.dumps(response)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
