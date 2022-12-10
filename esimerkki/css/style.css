@@ -315,6 +315,18 @@ button{
   border: 5px solid rgba(255, 255, 255, 0.5);
 }
 
+.red-icon {
+  background-color: #ba2727;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.5);
+}
+
+.magenta-icon {
+  background-color: #9527ba;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.5);
+}
+
 #myquest{
   display: none;
   width: auto;
