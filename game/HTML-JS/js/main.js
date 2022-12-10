@@ -11,6 +11,7 @@ map.setView([60, 24], 7);
 // global variables
 const apiUrl = 'http://127.0.0.1:5000/';
 const startLoc = 'EFHK'; // Add randomness!
+const gameId = '';
 const concerts = [];
 const airportMarkers = L.featureGroup().addTo(map);
 
@@ -43,41 +44,47 @@ async function getData(url) {
 
 // function to call starting quests // set values after getting data!
 function startingQuests(){
-    getData(`${apiUrl} starting quest url here!`)
+    getData(`${apiUrl}/${gameId}/ starting quest url here!`)
 }
 
 // function to generate available quests
 function generateNewQuests(){
-    getData(`${apiUrl} generate quests url here!`)
+    getData(`${apiUrl}/${gameId}/ generate quests url here!`)
+}
+// function to get available quest information
+function checkQuest(){
+    let questData = getData(`${apiUrl}/${gameId}/questcheck`)
+
 }
 
 // function to get quest // hide the questbutton upon success to prevent duplicate quest accepts
 function getQuest(questbutton_value, quests){
     let quest = quests[questbutton_value]
-    getData(`${apiUrl} getQuest url!`)
+    getData(`${apiUrl}/${gameId}/ getQuest url!`)
 }
 
 // function to complete quests // quest1, quest2, quest3, flight_destination, current_money
 function questComplete (airport, quests) {
     if (airport.quest_status === true) {
-        getData(`${apiUrl} checkquest url here!`)
+        getData(`${apiUrl}/${gameId}/ checkquest url here!`)
     }
 }
 
 // function to check if quest failed
 function checkIfQuestFailed(turn, quests, failed_quests){
-    getData(`${apiUrl} check if quest failed url`)
+    getData(`${apiUrl}/${gameId}/ check if quest failed url`)
 }
 
 // function to update game status
 function updateStatus(status) {
+    console.log(status)
     // document.querySelector('#player-name').innerHTML = `Player: ${status.name}`;
     document.querySelector('#consumed').innerHTML = status[1];
     document.querySelector('#budget').innerHTML = status[0];
     document.querySelector('#money').innerHTML = status[2];
-    document.querySelector('#turn').innerHTML = status.turn;
-    document.querySelector('#co2_level').innerHTML = status.co2_level;
-    document.querySelector('#passenger_capacity').innerHTML = status.passenger_capacity;
+    document.querySelector('#turn').innerHTML = status[3];
+    document.querySelector('#co_level').innerHTML = status[4];
+    document.querySelector('#passenger').innerHTML = status[5];
 }
 
 // function to show weather at selected airport
@@ -96,7 +103,7 @@ function getIndex(array, value) {
 
 // function to complete concert
 function completeConcert(){
-    getData(`${apiUrl} complete concert url!`)
+    getData(`${apiUrl}/${gameId}/ complete concert url!`)
 }
 // function to check if concert active in location
 function checkForConcert(airport, concerts) {
@@ -165,7 +172,7 @@ async function gameSetup(url) {
         airportMarkers.clearLayers();
         const gameData = await getData(url);
         console.log(gameData);
-        let status = [gameData.co2_budget, gameData.co2_consumed, gameData.money]
+        let status = [gameData.co2_budget, gameData.co2_consumed, gameData.money, gameData.turn, gameData.current_co2lvl, gameData.current_passengerlvl]
         console.log(status)
         updateStatus(status);
         if (!checkGameOver(gameData.status.co2.budget)) return;
