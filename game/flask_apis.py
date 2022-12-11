@@ -36,6 +36,8 @@ def start_game():
         games.append(game)
         game.location.generate_quests(game.turn, game)
         print(game.id)
+        response_airports = []
+        response_concerts = []
         response = [{"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
                      "co2_consumed": game.co2_consumed, "quests_failed":
                          game.failed_quests, "concerts_watched": len(game.concerts_watched),
@@ -43,9 +45,16 @@ def start_game():
                      "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
                      "current_passengerlvl": game.plane.psngrlvl}]
         for airport in game.airports:
-            response.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
-                             "Longitude": airport.longitude, "Concert_status": airport.concert_here,
-                             "Is_quest_destination": airport.quest_dest})
+            response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
+                                      "Longitude": airport.longitude, "Concert_status": airport.concert_here,
+                                      "Is_quest_destination": airport.quest_dest})
+        for concert in game.concerts:
+            response_concerts.append({
+                "Genre": concert.genre, "Icao": concert.icao, "Concert_over": concert.concert_over,
+                "Price": concert.price
+            })
+        response.append(response_concerts)
+        response.append(response_airports)
         response_json = json.dumps(response)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
@@ -64,7 +73,7 @@ def fly(icao, game_id):
             {"concert_status": airport.concert_here, "quest_status": airport.quest_dest, "icao": airport.icao,
              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name,
              "co2 consumed": game.co2_consumed, "failed_quests": game.failed_quests,
-             "active_quest_amount": len(game.quests)})
+             "active_quest_amount": len(game.quests), "turn": game.turn})
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
