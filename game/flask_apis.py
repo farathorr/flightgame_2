@@ -22,8 +22,8 @@ def find_game(game_id):
             return game
 
 
-def find_airport_quest(quest):
-    for airport in airports:
+def find_airport_quest(quest, game):
+    for airport in game.airports:
         if quest.icao == airport.icao:
             return airport
 
@@ -31,20 +31,22 @@ def find_airport_quest(quest):
 @app.route("/start/")
 def start_game():
     try:
-        generate_airports()
         game = Game()
-        game.concerts = generate_concerts()
+        game.concerts = generate_concerts(game)
         games.append(game)
-        game.location.generate_quests(game.turn)
+        game.location.generate_quests(game.turn, game)
         print(game.id)
-        response_json = json.dumps(
-            {"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
-             "co2_consumed": game.co2_consumed, "quests_failed":
-                 game.failed_quests, "concerts_watched": len(game.concerts_watched),
-             "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
-             "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
-             "current_passengerlvl": game.plane.psngrlvl})
-        print(response_json)
+        response = [{"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
+                     "co2_consumed": game.co2_consumed, "quests_failed":
+                         game.failed_quests, "concerts_watched": len(game.concerts_watched),
+                     "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
+                     "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
+                     "current_passengerlvl": game.plane.psngrlvl}]
+        for airport in game.airports:
+            response.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
+                             "Longitude": airport.longitude, "Concert_status": airport.concert_here,
+                             "Is_quest_destination": airport.quest_dest})
+        response_json = json.dumps(response)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "invalid parameters", "status": "400 Bad request"})
@@ -113,7 +115,7 @@ def take_quest(game_id, quest_i):
         response = []
         # is the player allowed to take more than one quest per turn?
         for quest in game.quests:
-            airport = find_airport_quest(quest)
+            airport = find_airport_quest(quest, game)
             response.append({
                 "Name": quest.name, "Icao": quest.icao, "Destination_coordinates": quest.destination_coords,
                 "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn,
