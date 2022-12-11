@@ -420,6 +420,11 @@ dialog span {
   padding-top: 15px;
   padding-left: 10px;
 }
+.textp{
+    text-align: left;
+  padding-bottom: 15px;
+  padding-left: 10px;
+}
 #consumed{
   text-align: start;
 }
