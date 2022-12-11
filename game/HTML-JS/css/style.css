@@ -42,8 +42,6 @@
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-
 
 }
 
@@ -56,6 +54,13 @@
 .flex-wrap-aq1{
   display:flex;
   flex-direction: column;
+}
+.flex-wrap-stats {
+  display: flex;
+  flex-wrap: wrap;
+  width: 49%;
+  align-items: flex-start;
+
 }
 .aqcolumn{
   width: 100%;
@@ -403,10 +408,30 @@ dialog span {
   color: #333333;
 }
 
-#fancy3{
-   margin-bottom: 1rem;
+#fancy3 {
+  margin-bottom: 1rem;
   justify-content: center;
-  width:100%;
+  width: 100%;
   font-size: 7mm;
   color: #333333;
+}
+.textc {
+  text-align: left;
+  padding-top: 15px;
+  padding-left: 10px;
+}
+.textp{
+    text-align: left;
+  padding-bottom: 15px;
+  padding-left: 10px;
+}
+#consumed{
+  text-align: start;
+}
+.imgc{
+
+  align-self: center;
+}
+tr{
+  height:5%;
 }
