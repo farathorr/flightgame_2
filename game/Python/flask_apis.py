@@ -124,20 +124,33 @@ def quest_check(game_id):
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
-@app.route("/<game_id>/takequest/<quest_i>")
-def take_quest(game_id, quest_i):
+@app.route("/<game_id>/takequest/<quest_num>")
+def take_quest(game_id, quest_num):
     try:
         game = find_game(game_id)
-        game.take_quest(int(quest_i))
-        print(game.quests)
+        game.take_quest(int(quest_num))
+        airport = game.location
+        quest = airport.quests[int(quest_num)]
+        response_json = json.dumps({
+            "Name": quest.name, "Icao": quest.icao, "Destination_coordinates": quest.destination_coords,
+            "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn,
+            "Airport_quest_dest": airport.quest_dest
+        })
+        return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
+@app.route("/<game_id>/currentquests")
+def current_quests(game_id):
+    try:
+        game = find_game(game_id)
         response = []
-        # is the player allowed to take more than one quest per turn?
         for quest in game.quests:
-            airport = find_airport_quest(quest, game)
             response.append({
                 "Name": quest.name, "Icao": quest.icao, "Destination_coordinates": quest.destination_coords,
-                "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn,
-                "Airport_quest_dest": airport.quest_dest
+                "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn
             })
         response_json = json.dumps(response)
         return Response(response=response_json, status=200, mimetype="application/json")

@@ -24,7 +24,7 @@
    width:auto;
 }
 #tk_button{
-   margin-left: 3rem;
+  margin-left: 3rem;
   width:auto;
 
 }
@@ -42,6 +42,9 @@
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+
+
 }
 
 .flex-wrap-guest{
@@ -131,7 +134,7 @@ main {
 }
 
 .box {
-  padding: 1rem;
+  padding: 0.4rem;
   font-size: x-small;
 }
 .box2 {
@@ -227,6 +230,7 @@ main {
   color: black; /* White text */
   padding: 10px 24px; /* Some padding */
   cursor: pointer; /* Pointer/hand icon */
+  margin-bottom: 1rem;
 }
 
 /* Clear floats (clearfix hack) */
@@ -243,17 +247,19 @@ main {
 
 }
 button{
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   justify-content: center;
-  width:33.3%;
+  width:32%;
   font-size: 7mm;
   color: #333333;
+  margin-right: 0.5rem;
+
 }
 
 .paiv{
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   justify-content: center;
-  width:50%;
+  width:48%;
   font-size: 7mm;
   color: #333333;
 }
@@ -269,7 +275,7 @@ button{
 
 #player-form {
   display: flex;
-  width: 50%;
+  width: 49%;
   margin: 4rem auto;
   flex-direction: column;
 }

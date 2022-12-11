@@ -44,8 +44,8 @@ class Game:
                         airport.guest_dest = False
         self.location.generate_quests(self.turn, self)
 
-    def take_quest(self, quest_i):
-        selected_quest = self.location.quests[quest_i]
+    def take_quest(self, quest_num):
+        selected_quest = self.location.quests[quest_num]
         self.quests.append(selected_quest)
         for airport in self.airports:
             if airport.icao == selected_quest.icao:
@@ -70,3 +70,4 @@ class Game:
                     self.money = self.money - concert.price
                     concert.concert_over = True
                     self.location.concert_here = False
+
