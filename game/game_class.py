@@ -5,8 +5,6 @@ from geopy import distance
 from concert_class import generate_concerts
 from airport_class import *
 
-concerts = generate_concerts()
-
 
 def get_data(icao):
     for airport in airports:
@@ -22,6 +20,7 @@ class Game:
         self.co2_consumed = consumed
         self.failed_quests = failed  # if more than 3 failed, game over
         self.concerts_watched = []  # if 6, you won the game
+        self.concerts = []
         self.location = airports[random.randint(0, 446)]
         self.plane = Plane()
         self.turn = 1
@@ -45,8 +44,8 @@ class Game:
                         airport.guest_dest = False
         self.location.generate_quests(self.turn)
 
-    def take_quest(self, index):
-        selected_quest = self.location.quests[index]
+    def take_quest(self, quest_i):
+        selected_quest = self.location.quests[quest_i]
         self.quests.append(selected_quest)
         for airport in airports:
             if airport.icao == selected_quest.icao:
@@ -62,7 +61,7 @@ class Game:
                         airport.quest_dest = False
 
     def watch_concert(self):
-        for concert in concerts:
+        for concert in self.concerts:
             if concert.concert_over:
                 return
             else:
@@ -71,3 +70,4 @@ class Game:
                     self.money = self.money - concert.price
                     concert.concert_over = True
                     self.location.concert_here = False
+
