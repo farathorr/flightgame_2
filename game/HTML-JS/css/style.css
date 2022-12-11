@@ -38,9 +38,24 @@
   transform: scale(1.1);
 }
 
+/* column thing */
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;
+}
+
+.flex-wrap-guest{
+  display:flex;
+  flex-direction: column;
+}
+
+
+.flex-wrap-aq1{
+  display:flex;
+  flex-direction: column;
+}
+.aqcolumn{
+  width: 100%;
 }
 
 .space-evenly {
@@ -365,4 +380,27 @@ dialog span {
   text-decoration: none;
   color: #fff;
   filter: drop-shadow(2px 2px 2px #000);
+}
+
+#fancy1{
+  margin-bottom: 1rem;
+  justify-content: center;
+  width:100%;
+  font-size: 7mm;
+  color: #333333;
+}
+#fancy2{
+  margin-bottom: 1rem;
+  justify-content: center;
+  width:100%;
+  font-size: 7mm;
+  color: #333333;
+}
+
+#fancy3{
+   margin-bottom: 1rem;
+  justify-content: center;
+  width:100%;
+  font-size: 7mm;
+  color: #333333;
 }
