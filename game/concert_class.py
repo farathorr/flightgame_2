@@ -1,4 +1,4 @@
-import random
+
 from random_genre_request import genre_request
 from airport_class import *
 
