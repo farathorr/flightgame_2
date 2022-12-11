@@ -75,7 +75,7 @@ def fly(icao, game_id):
         response = [
             {"Concert_status": airport.concert_here, "Quest_status": airport.quest_dest, "Icao": airport.icao,
              "Latitude": airport.latitude, "Longitude": airport.longitude, "Name": airport.name,
-             "Co2_consumed": game.co2_consumed, "Failed_quests": game.failed_quests,
+             "Co2_consumed": game.co2_consumed, "Quests_failed": game.failed_quests,
              "Active_quest_amount": len(game.quests), "Turn": game.turn, "Money": game.money}]
         for airport in game.airports:
             response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
