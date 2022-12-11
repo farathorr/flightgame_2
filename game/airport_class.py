@@ -13,13 +13,13 @@ class Airport:
         self.name = name
         self.quests = []
 
-    def generate_quests(self, turn):
+    def generate_quests(self, turn, game):
         cur_loc_coords = self.latitude, self.longitude
 
         class Quest:
 
             def __init__(self, passenger_amount):
-                self.destination = airports[random.randint(0, 446)]
+                self.destination = game.airports[random.randint(0, 446)]
                 self.name = self.destination.name
                 self.icao = self.destination.icao
                 self.destination_coords = self.destination.latitude, self.destination.longitude
@@ -48,7 +48,7 @@ def generate_airports():
     return airports_list
 
 
-airports = generate_airports()
+
 
 # select_airport = airports[random.randint(0, 446)]
 # select_airport.generate_quests(1)

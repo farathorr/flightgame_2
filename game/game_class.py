@@ -21,7 +21,8 @@ class Game:
         self.failed_quests = failed  # if more than 3 failed, game over
         self.concerts_watched = []  # if 6, you won the game
         self.concerts = []
-        self.location = airports[random.randint(0, 446)]
+        self.airports = generate_airports()
+        self.location = self.airports[random.randint(0, len(self.airports))]
         self.plane = Plane()
         self.turn = 1
         self.quests = []
