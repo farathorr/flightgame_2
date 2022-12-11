@@ -42,6 +42,10 @@
   display: flex;
   flex-wrap: wrap;
 }
+.flex-wrap-guest{
+  display:flex;
+  flex-direction: column;
+}
 
 .space-evenly {
   justify-content: space-evenly;
