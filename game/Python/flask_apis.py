@@ -69,7 +69,6 @@ def fly(icao, game_id):
     try:
         game = find_game(game_id)
         game.flyto(icao)
-        game.location.generate_quests(game.turn, game)
         airport = game.location
         response_airports = []
         response = [
@@ -166,9 +165,8 @@ def complete_quest(game_id):
         game.return_quest()
         quests_dict = []
         for quest in game.quests:
-            quest = {"Name": quest.name, "Destination_coordinates": quest.destination_coords,
-                     "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn}
-            quests_dict.append(quest)
+            quests_dict.append({"Name": quest.name, "Destination_coordinates": quest.destination_coords,
+                                "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn})
         quests_dict.append({"Money": game.money})
         response_json = json.dumps(quests_dict)
         return Response(response=response_json, status=200, mimetype="application/json")
