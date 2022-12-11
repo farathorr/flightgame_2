@@ -15,6 +15,7 @@ let gameId = '';
 let gameData = '';
 let availableQuests
 const concerts = [];
+let airports = [];
 const airportMarkers = L.featureGroup().addTo(map);
 let cq1active = false
 let cq2active = false
@@ -46,6 +47,11 @@ async function getData(url) {
     if (!response.ok) throw new Error('Invalid server input!');
     const data = await response.json();
     return data;
+}
+
+// function to fly to a new airport
+async function flyto(dest_icao) {
+    return await getData(`${apiUrl}/${gameId}/flyto/${dest_icao}`)
 }
 
 // function to call starting quests // set values after getting data!
@@ -109,6 +115,7 @@ function checkIfQuestFailed(turn, quests, failed_quests) {
 
 // function to update game status
 function updateStatus(status) {
+    console.log("Status:")
     console.log(status)
     // document.querySelector('#player-name').innerHTML = `Player: ${status.name}`;
     document.querySelector('#consumed').innerHTML = status[1];
@@ -135,20 +142,21 @@ function getIndex(array, value) {
 }
 
 // function to complete concert
-function completeConcert() {
-    getData(`${apiUrl}/${gameId}/ complete concert url!`)
+async function watchConcert() {
+    return await getData(`${apiUrl}/${gameId}/watch`)
+
 }
 
 // function to check if concert active in location
 function checkForConcert(airport, concerts) {
-    if (airport.concert_status === true) {
+    if (airport.Concert_status === true) {
         let concert = concerts[getIndex(concerts, airport.icao)]
         let participation_check = confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.price}`)
         if (participation_check === true) {
             let balance_check = (gamedata.status.money >= concert.price)
             if (balance_check === true) {
                 checkConcerts(concert.genre)
-                completeConcert() // check what values needed
+                let consertData = watchConcert() // check what values needed
                 updateConcerts(concerts)
             } else {
                 alert('Rahasi eivät riitä konserttirannekkeeseen.')
@@ -205,86 +213,99 @@ async function gameSetup(url) {
         document.querySelector('.goal').classList.add('hide');
         airportMarkers.clearLayers();
         gameData = await getData(url);
+        console.log("Game Data:")
         console.log(gameData);
-        gameId = gameData.id
-        let status = [gameData.co2_budget, gameData.co2_consumed, gameData.money, gameData.turn, gameData.current_co2lvl, gameData.current_passengerlvl, gameData.current_airportname]
+        gameId = gameData[0].id
+        for (let i = 1; i <= gameData.length; i++) {
+            airports.push(gameData[i])
+        }
+        console.log("Airports:")
+        console.log(airports)
+        console.log(airports[0])
+        let status = []
+        // status = [gameData[0].co2_budget, gameData[0].co2_consumed, gameData[0].money, gameData[0].turn, gameData[0].current_co2lvl, gameData[0].current_passengerlvl, gameData[0].current_airportname]
+        status.push(gameData[0].co2_budget, gameData[0].co2_consumed, gameData[0].money, gameData[0].turn, gameData[0].current_co2lvl, gameData[0].current_passengerlvl, gameData[0].current_airportname)
+        // console.log("Status:)
         // console.log(status)
         updateStatus(status);
         availableQuests = await checkQuests()
         // if (!checkGameOver(gameData.status.co2.budget)) return;
         // checkForConcert(gameData.airport.icao,)
         // generateNewQuests()
-        // for (let airport of gameData.location) {
-        //     const marker = L.marker([airport.latitude, airport.longitude]).addTo(map);
-        //     airportMarkers.addLayer(marker);
-        //     if (airport.active) {
-        //         map.flyTo([airport.latitude, airport.longitude], 10);
-        //         // showWeather(airport);
-        //         checkForConcert(airport.icao, concerts.genre);
-        //         questComplete(airport.icao, quests)
-        //         checkIfQuestFailed(gameData.turn, quests, gameData.failed_quests)
-        //         marker.bindPopup(`You are here: <b>${airport.name}</b>`);
-        //         marker.openPopup();
-        //         marker.setIcon(greenIcon);
-        //     } else if (airport.concert_status && airport.quest_status) {
-        //         marker.setIcon(magentaIcon);
-        //         const popupContent = document.createElement('div');
-        //         const h4 = document.createElement('h4');
-        //         h4.innerHTML = airport.name;
-        //         popupContent.append(h4);
-        //         const goButton = document.createElement('button');
-        //         goButton.classList.add('button');
-        //         goButton.innerHTML = 'Fly here';
-        //         popupContent.append(goButton);
-        //         const p = document.createElement('p');
-        //         let q_index = getIndex(quests, airport.icao)
-        //         let c_index = getIndex(concerts, airport.icao)
-        //         p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[q_index].turn}\nTäällä ${concerts[c_index].genre} konsertti`;
-        //         popupContent.append(p);
-        //         marker.bindPopup(popupContent);
-        //         goButton.addEventListener('click', function () {
-        //             gameSetup(`${apiUrl}flyto?game=${gameData.status.id}&dest=${airport.ident}&consumption=${airport.co2_consumption}`);
-        //         });
-        //     } else if (airport.concert_status) {
-        //         marker.setIcon(blueIcon);
-        //         const popupContent = document.createElement('div');
-        //         const h4 = document.createElement('h4');
-        //         h4.innerHTML = airport.name;
-        //         popupContent.append(h4);
-        //         const goButton = document.createElement('button');
-        //         goButton.classList.add('button');
-        //         goButton.innerHTML = 'Fly here';
-        //         popupContent.append(goButton);
-        //         const p = document.createElement('p');
-        //         let index = getIndex(concerts, airport.icao)
-        //         p.innerHTML = `Täällä ${concerts[index].genre} konsertti`;
-        //         popupContent.append(p);
-        //         marker.bindPopup(popupContent);
-        //         goButton.addEventListener('click', function () {
-        //             gameSetup(`${apiUrl}flyto?game=${gameData.status.id}&dest=${airport.ident}&consumption=${airport.co2_consumption}`);
-        //         });
-        //     } else if (airport.quest_status) {
-        //         marker.setIcon(redIcon);
-        //         const popupContent = document.createElement('div');
-        //         const h4 = document.createElement('h4');
-        //         h4.innerHTML = airport.name;
-        //         popupContent.append(h4);
-        //         const goButton = document.createElement('button');
-        //         goButton.classList.add('button');
-        //         goButton.innerHTML = 'Fly here';
-        //         popupContent.append(goButton);
-        //         const p = document.createElement('p');
-        //         let index = getIndex(quests, airport.icao)
-        //         p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[index].turn} `;
-        //         popupContent.append(p);
-        //         marker.bindPopup(popupContent);
-        //         goButton.addEventListener('click', function () {
-        //             gameSetup(`${apiUrl}flyto?game=${gameData.status.id}&dest=${airport.ident}&consumption=${airport.co2_consumption}`);
-        //         });
-        //     }
-        // }
-        // // updateConcerts(gameData.concerts);
-    } catch (error) {
+        for (let airport of airports) {
+            // console.log("Singular airport")
+            // console.log(airport)
+            const marker = L.marker([airport.Latitude, airport.Longitude]).addTo(map);
+            airportMarkers.addLayer(marker);
+            if (airport.Concert_status && airport.Is_quest_destination) {
+                marker.setIcon(magentaIcon);
+                const popupContent = document.createElement('div');
+                const h4 = document.createElement('h4');
+                h4.innerHTML = airport.name;
+                popupContent.append(h4);
+                const goButton = document.createElement('button');
+                goButton.classList.add('button');
+                goButton.innerHTML = 'Fly here';
+                popupContent.append(goButton);
+                const p = document.createElement('p');
+                let q_index = getIndex(quests, airport.icao)
+                let c_index = getIndex(concerts, airport.icao)
+                p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[q_index].turn}\nTäällä ${concerts[c_index].genre} konsertti`;
+                popupContent.append(p);
+                marker.bindPopup(popupContent);
+                goButton.addEventListener('click', function () {
+                    gameSetup(`${apiUrl}flyto?game=${gameData.status.id}&dest=${airport.ident}&consumption=${airport.co2_consumption}`);
+                });
+            } else if (airport.Concert_status) {
+                marker.setIcon(blueIcon);
+                const popupContent = document.createElement('div');
+                const h4 = document.createElement('h4');
+                h4.innerHTML = airport.name;
+                popupContent.append(h4);
+                const goButton = document.createElement('button');
+                goButton.classList.add('button');
+                goButton.innerHTML = 'Fly here';
+                popupContent.append(goButton);
+                const p = document.createElement('p');
+                let index = getIndex(concerts, airport.Icao)
+                p.innerHTML = `Täällä ${concerts[index].genre} konsertti`;
+                popupContent.append(p);
+                marker.bindPopup(popupContent);
+                goButton.addEventListener('click', function () {
+                    flyto(airport.Icao);
+                });
+            } else if (airport.Is_quest_destination) {
+                marker.setIcon(redIcon);
+                const popupContent = document.createElement('div');
+                const h4 = document.createElement('h4');
+                h4.innerHTML = airport.Name;
+                popupContent.append(h4);
+                const goButton = document.createElement('button');
+                goButton.classList.add('button');
+                goButton.innerHTML = 'Fly here';
+                popupContent.append(goButton);
+                const p = document.createElement('p');
+                let index = getIndex(quests, airport.Icao)
+                p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[index].turn} `;
+                popupContent.append(p);
+                marker.bindPopup(popupContent);
+                goButton.addEventListener('click', function () {
+                    flyto(airport.Icao);
+                });
+            } else if (airport.Icao === gameData.current_airportname) {
+                map.flyTo([airport.Latitude, airport.Longitude], 10);
+                // showWeather(airport);
+                checkForConcert(airport.Icao, concerts.genre);
+                questComplete(airport.Icao, quests)
+                checkIfQuestFailed(gameData.turn, quests, gameData.failed_quests)
+                marker.bindPopup(`You are here: <b>${airport.name}</b>`);
+                marker.openPopup();
+                marker.setIcon(greenIcon);
+            }
+            // // updateConcerts(gameData.concerts);
+        }
+    } catch
+        (error) {
         console.log(error);
     }
 }
@@ -338,7 +359,9 @@ function showDialog() {
     if (!questTaken) {
         console.log("Modal Opened")
         dialog.showModal()
-    }else {alert('Olet ottanut jo tehtävän tällä vuorolla')}
+    } else {
+        alert('Olet ottanut jo tehtävän tällä vuorolla')
+    }
 }
 
 function hideDialog() {
