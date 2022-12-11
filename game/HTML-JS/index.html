@@ -11,15 +11,14 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons/dist/ionicons/ionicons.esm.js" defer></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons/dist/ionicons/ionicons.js" defer></script>
     <script src="js/main.js" defer></script>
-    <title>Top Gun</title>
+    <title>Flightgame 2.0</title>
 </head>
 
 <body>
 <div class="container">
     <header class="page-header">
         <h1 class="page-title">
-            <ion-icon name="airplane-outline"></ion-icon>&nbsp;Top&nbsp;Gun&nbsp;<ion-icon
-                name="airplane-outline"></ion-icon>
+            Flightgame 2.0
         </h1>
 
         <nav>
@@ -46,7 +45,7 @@
                 <table>
                     <tr class="flex-wrap">
                         <td class="flex-wrap-stats">
-                            <img class="imgc" src="img/icons8-co2-100.png" alt="Goal weather icon"><div class="textc">CO2 Käytetty: <span
+                            <img class="imgc" src="img/icons8-co2-100.png" alt="Goal weather icon"><div class="textc">CO2 päästöt: <span
                                 id="consumed">999</span>kg</div>
                         </td >
                         <td class="flex-wrap-stats">
@@ -55,7 +54,7 @@
                     </tr>
                     <tr class="flex-wrap">
                         <td class="flex-wrap-stats" >
-                            <img class="imgc" src="img/icons8-co2-100.png" alt="Goal weather icon"><div class="textc"> CO2 Budejtti: <span id="budget">9999</span>kg</div>
+                            <img class="imgc" src="img/icons8-co2-100.png" alt="Goal weather icon"><div class="textc"> CO2 budjetti: <span id="budget">9999</span>kg</div>
                         </td>
                         <td class="flex-wrap-stats">
                             <img class="imgc" src="img/icons8-banknotes-100.png" alt="Goal weather icon"><div class="textc" >Rahat: <span id="money">999</span>€</div>
@@ -63,11 +62,11 @@
                     </tr>
                     <tr class="flex-wrap">
                         <td class="flex-wrap-stats">
-                            <img class="imgc" src="img/icons8-co2-reduction-100.png" alt="Goal weather icon"><div class="textc" > CO2 filtteri taso: <span
+                            <img class="imgc" src="img/icons8-co2-reduction-100.png" alt="Goal weather icon"><div class="textc" > CO2 suodattimen taso: <span
                                 id="co_level">1-3</span></div>
                         </td>
                         <td class="flex-wrap-stats">
-                            <img class="imgc" src="img/icons8-passenger-100.png" alt="Goal weather icon"><div class="textc"> Maksimi matkustajamäärä: <span
+                            <img class="imgc" src="img/icons8-passenger-100.png" alt="Goal weather icon"><div class="textc"> Matkustajapaikkojen määrä: <span
                                 id="passenger">1-3</span></div>
                         </td>
                     </tr>
@@ -77,6 +76,7 @@
 
                 <header class="flex-wrap-stats" >
                     <img class="imgc" src="img/icons8-airport-100-2.png">
+                    <p>Tämänhetkinen sijaintisi:</p>
                     <h2 class="textp" id="airport-name">Airport name</h2>
                 </header>
                 <!--                    <table id="weather">-->
@@ -91,22 +91,22 @@
             </section>
             <section class="box">
                 <header>
-                    <h2 id="paivitys">Upgrade</h2>
+                    <h2 id="paivitys">Päivitä</h2>
                 </header>
 
                 <ul class="flex-wrap">
 
-                    <button class="paiv" id="upgradeco2" type="button" onclick="alert('Hello world!')">
+                    <button class="paiv" id="upgradeco2" type="button">
                         <figure>
                             <img src="img/icons8-tools-100.png" alt="Goal weather icon">
-                            <figcaption>CO2 filtteri</figcaption>
+                            <figcaption>CO2 suodatin</figcaption>
                         </figure>
                     </button>
 
-                    <button class="paiv" id ="upgradepass" type="button" onclick="alert('Hello world!')">
+                    <button class="paiv" id ="upgradepass" type="button">
                         <figure>
                             <img src="img/icons8-tools-100.png" alt="Goal weather icon">
-                            <figcaption>tilavuus</figcaption>
+                            <figcaption>Matkustajapaikat</figcaption>
                         </figure>
                     </button>
 
@@ -115,9 +115,9 @@
             </section>
             <header>
                 <div class="btn-group">
-                    <button id="t_button">Tehtävät</button>
-                    <button id="k_button">Konserit</button>
-                    <button id="tk_button">valitse tehtävä</button>
+                    <button id="t_button">Aktiiviset tehtävät</button>
+                    <button id="k_button">Konsertit</button>
+                    <button id="tk_button">Valitse uusi tehtävä</button>
 
                 </div>
             </header>
