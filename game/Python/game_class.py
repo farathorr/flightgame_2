@@ -32,11 +32,12 @@ class Game:
         current_coords = self.location.latitude, self.location.longitude
         distance = round(int(geopy.distance.distance(current_coords, dest_coords).km))
         consumption = distance * self.plane.get_co2mod()
+        self.location.quests = []
         self.location = dest
-        self.co2_consumed += consumption[0]
+        self.co2_consumed += consumption
         self.turn += 1
         for selected_quest in self.quests:
-            if selected_quest.turn > self.turn:
+            if selected_quest.turn < self.turn:
                 self.quests.remove(selected_quest)
                 self.failed_quests += 1
                 for airport in self.airports:
@@ -54,7 +55,8 @@ class Game:
     def return_quest(self):
         for quest in self.quests:
             if quest.icao == self.location.icao:
-                self.money += quest.reward
+                new_money = self.money + quest.reward
+                self.money = new_money
                 self.quests.remove(quest)
                 for airport in self.airports:
                     if airport.icao == quest.icao:
@@ -71,3 +73,11 @@ class Game:
                     concert.concert_over = True
                     self.location.concert_here = False
 
+
+game = Game()
+print("Starting money", game.money)
+game.location.generate_quests(game.turn, game)
+game.take_quest(0)
+game.flyto(game.quests[0].icao)
+game.return_quest()
+print("New money", game.money)

@@ -40,11 +40,9 @@ class Plane:
         cursor = connection.cursor()
         cursor.execute(sql)
         result = cursor.fetchone()
-        print(result[0])
-        return result
+        return int(result[0])
 
 
 plane = Plane()
-print(plane.psngrlvl)
-plane.upgrade_psngrlvl(1000)
-print(plane.psngrlvl)
+print(plane.get_co2mod())
+

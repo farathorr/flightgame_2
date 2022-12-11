@@ -40,12 +40,12 @@ def start_game():
         print(game.id)
         response_airports = []
         response_concerts = []
-        response = [{"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
-                     "co2_consumed": game.co2_consumed, "quests_failed":
-                         game.failed_quests, "concerts_watched": len(game.concerts_watched),
-                     "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
-                     "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
-                     "current_passengerlvl": game.plane.psngrlvl, "current_airportname": game.location.name}]
+        response = [{"Id": game.id, "Money": game.money, "Co2_budget": game.co2_budget,
+                     "Co2_consumed": game.co2_consumed, "Quests_failed":
+                         game.failed_quests, "Concerts_watched": len(game.concerts_watched),
+                     "Latitude": game.location.latitude, "Longitude": game.location.longitude,
+                     "Icao": game.location.icao, "Turn": game.turn, "Current_co2lvl": game.plane.co2level,
+                     "Current_passengerlvl": game.plane.psngrlvl, "Name": game.location.name}]
         for airport in game.airports:
             response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
                                       "Longitude": airport.longitude, "Concert_status": airport.concert_here,
@@ -69,14 +69,13 @@ def fly(icao, game_id):
     try:
         game = find_game(game_id)
         game.flyto(icao)
-        game.location.generate_quests(game.turn, game)
         airport = game.location
         response_airports = []
         response = [
-            {"concert_status": airport.concert_here, "quest_status": airport.quest_dest, "icao": airport.icao,
-             "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name,
-             "co2 consumed": game.co2_consumed, "failed_quests": game.failed_quests,
-             "active_quest_amount": len(game.quests), "turn": game.turn, "money": game.money}]
+            {"Concert_status": airport.concert_here, "Quest_status": airport.quest_dest, "Icao": airport.icao,
+             "Latitude": airport.latitude, "Longitude": airport.longitude, "Name": airport.name,
+             "Co2_consumed": game.co2_consumed, "Quests_failed": game.failed_quests,
+             "Active_quest_amount": len(game.quests), "Turn": game.turn, "Money": game.money}]
         for airport in game.airports:
             response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
                                       "Longitude": airport.longitude, "Concert_status": airport.concert_here,
@@ -166,9 +165,8 @@ def complete_quest(game_id):
         game.return_quest()
         quests_dict = []
         for quest in game.quests:
-            quest = {"Name": quest.name, "Destination_coordinates": quest.destination_coords,
-                     "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn}
-            quests_dict.append(quest)
+            quests_dict.append({"Name": quest.name, "Destination_coordinates": quest.destination_coords,
+                                "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn})
         quests_dict.append({"Money": game.money})
         response_json = json.dumps(quests_dict)
         return Response(response=response_json, status=200, mimetype="application/json")
