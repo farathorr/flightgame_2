@@ -12,8 +12,14 @@ map.setView([60, 24], 7);
 const apiUrl = 'http://127.0.0.1:5000/';
 const startLoc = 'EFHK'; // Add randomness!
 let gameId = '';
+let gameData = '';
+let availableQuests
 const concerts = [];
 const airportMarkers = L.featureGroup().addTo(map);
+let cq1active = false
+let cq2active = false
+let cq3active = false
+let questTaken = false
 
 // icons
 const blueIcon = L.divIcon({className: 'blue-icon'}); // For Concert
@@ -43,23 +49,18 @@ async function getData(url) {
 }
 
 // function to call starting quests // set values after getting data!
-function startingQuests() {
-    getData(`${apiUrl}/${gameId}/ starting quest url here!`)
-}
-
-// function to generate available quests
-function generateNewQuests() {
-    getData(`${apiUrl}/${gameId}/ generate quests url here!`)
-}
+// function startingQuests() {
+//     getData(`${apiUrl}/${gameId}/ starting quest url here!`)
+// }
 
 // function to get available quest information
-async function checkQuest() {
+async function checkQuests() {
     let quests = await getData(`${apiUrl}/${gameId}/questcheck`)
     console.log(`Quests: ${quests}`)
     console.log(quests)
     console.log(quests[0])
     for (let x in quests) {
-        let tag = "#aq"+(parseInt(x)+1)
+        let tag = "#aq" + (parseInt(x) + 1)
         console.log(`Tag:${tag}`)
         let target = document.querySelector(tag)
         let content = (`Destination: ` + quests[x].Name + `<br/>`) + (quests[x].Passenger_amount + ` passenger(s)` + `<br/>`) + (`Reward: ` + quests[x].Reward + `€`)
@@ -70,14 +71,33 @@ async function checkQuest() {
 }
 
 // function to get quest // hide the questbutton upon success to prevent duplicate quest accepts
-function getQuest(questbutton_value, quests) {
-    let quest = quests[questbutton_value]
-    getData(`${apiUrl}/${gameId}/ getQuest url!`)
+async function getQuest(questButton_value, quests, gameData) {
+    let quest = quests[questButton_value]
+    if ((gameData.current_passengerlvl + 1) >= quest.Passenger_amount) {
+        for (let i = 1; i <= 3; i++) {
+            let positiontag = "#questposition" + (parseInt(i))
+            let questposition = document.querySelector(positiontag)
+            if (questposition.innerHTML === "Much Empty") {
+                let takenQuestData = await getData(`${apiUrl}/${gameId}/takequest/${questButton_value}`)
+                console.log(`Taken Quest data:`)
+                console.log(takenQuestData)
+                let content = (`Destination: ` + takenQuestData[0].Name + `<br/>`) + (takenQuestData[0].Passenger_amount + ` passenger(s)` + `<br/>`) + (`Reward: ` + takenQuestData[0].Reward + `€` + `<br/>` + `Tehtävä umpeutuu vuorolla: ` + takenQuestData[0].Turn)
+                questposition.innerHTML = content
+                alert('Tehtävä hyväksytty')
+                questTaken = true
+                hideDialog()
+                return takenQuestData
+            }
+        }
+        alert('Tehtävä listasi on täynnä');
+    } else {
+        alert('Lentokoneesi matkustajakapasiteetti ei riitä tähän tehtävään')
+    }
 }
 
 // function to complete quests // quest1, quest2, quest3, flight_destination, current_money
 function questComplete(airport, quests) {
-    if (airport.quest_status === true) {
+    if (airport.quest_dest === true) {
         getData(`${apiUrl}/${gameId}/ checkquest url here!`)
     }
 }
@@ -131,7 +151,7 @@ function checkForConcert(airport, concerts) {
                 completeConcert() // check what values needed
                 updateConcerts(concerts)
             } else {
-                prompt('Rahasi eivät riitä konserttirannekkeeseen.')
+                alert('Rahasi eivät riitä konserttirannekkeeseen.')
             }
         }
     }
@@ -184,13 +204,13 @@ async function gameSetup(url) {
     try {
         document.querySelector('.goal').classList.add('hide');
         airportMarkers.clearLayers();
-        const gameData = await getData(url);
+        gameData = await getData(url);
         console.log(gameData);
         gameId = gameData.id
-        const availableQuests = await checkQuest()
         let status = [gameData.co2_budget, gameData.co2_consumed, gameData.money, gameData.turn, gameData.current_co2lvl, gameData.current_passengerlvl, gameData.current_airportname]
         // console.log(status)
         updateStatus(status);
+        availableQuests = await checkQuests()
         // if (!checkGameOver(gameData.status.co2.budget)) return;
         // checkForConcert(gameData.airport.icao,)
         // generateNewQuests()
@@ -315,8 +335,10 @@ const span = document.querySelector('#modalX')
 span.addEventListener('click', hideDialog)
 
 function showDialog() {
-    console.log("Modal Opened")
-    dialog.showModal()
+    if (!questTaken) {
+        console.log("Modal Opened")
+        dialog.showModal()
+    }else {alert('Olet ottanut jo tehtävän tällä vuorolla')}
 }
 
 function hideDialog() {
@@ -325,23 +347,21 @@ function hideDialog() {
 }
 
 
-// Quest Buttons and button functions
-// const questbutton1 = document.querySelector(#questbutton1)
-// const questbutton2 = document.querySelector(#questbutton2)
-// const questbutton3 = document.querySelector(#questbutton3)
-//
-// function qbutton1Function(quests){
-//     let value = 0
-//     getQuest(value, quests)
-// }
-// function qbutton2Function(quests){
-//     let value = 1
-//     getQuest(value, quests)
-// }
-// function qbutton3Function(quests){
-//     let value = 2
-//     getQuest(value, quests)
-// }
-// questbutton1.addEventListener("click", qbutton1Function(quests))
-// questbutton2.addEventListener("click", qbutton2Function(quests))
-// questbutton3.addEventListener("click", qbutton3Function(quests))
+// //Quest Buttons and button functions
+
+let questButton1 = document.querySelector('#aq1button')
+let questButton2 = document.querySelector('#aq2button')
+let questButton3 = document.querySelector('#aq3button')
+
+questButton1.addEventListener("click", async function () {
+    let value = 0
+    getQuest(value, availableQuests, gameData)
+})
+questButton2.addEventListener("click", async function () {
+    let value = 1
+    getQuest(value, availableQuests, gameData)
+})
+questButton3.addEventListener("click", async function () {
+    let value = 2
+    getQuest(value, availableQuests, gameData)
+})
