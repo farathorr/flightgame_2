@@ -41,7 +41,7 @@ def start_game():
                          game.failed_quests, "concerts_watched": len(game.concerts_watched),
                      "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
                      "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
-                     "current_passengerlvl": game.plane.psngrlvl}]
+                     "current_passengerlvl": game.plane.psngrlvl, "current_airportname": game.location.name}]
         for airport in game.airports:
             response.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
                              "Longitude": airport.longitude, "Concert_status": airport.concert_here,
