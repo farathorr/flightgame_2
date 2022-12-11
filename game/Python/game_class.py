@@ -32,6 +32,7 @@ class Game:
         current_coords = self.location.latitude, self.location.longitude
         distance = round(int(geopy.distance.distance(current_coords, dest_coords).km))
         consumption = distance * self.plane.get_co2mod()
+        self.location.quests = []
         self.location = dest
         self.co2_consumed += consumption
         self.turn += 1
