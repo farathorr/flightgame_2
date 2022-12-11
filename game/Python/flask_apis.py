@@ -1,5 +1,7 @@
 from flask import Flask, Response, json
 from flask_cors import CORS
+
+from concert_class import generate_concerts
 from game_class import *
 
 app = Flask(__name__)
@@ -41,9 +43,9 @@ def start_game():
         response = [{"id": game.id, "money": game.money, "co2_budget": game.co2_budget,
                      "co2_consumed": game.co2_consumed, "quests_failed":
                          game.failed_quests, "concerts_watched": len(game.concerts_watched),
-                     "latitude": game.location.latitude, "longitude": game.location.longitude,
-                     "icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
-                     "current_passengerlvl": game.plane.psngrlvl, "name": game.location.name}]
+                     "current_latitude": game.location.latitude, "current_longitude": game.location.longitude,
+                     "current_icao": game.location.icao, "turn": game.turn, "current_co2lvl": game.plane.co2level,
+                     "current_passengerlvl": game.plane.psngrlvl, "current_airportname": game.location.name}]
         for airport in game.airports:
             response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
                                       "Longitude": airport.longitude, "Concert_status": airport.concert_here,
@@ -67,13 +69,20 @@ def fly(icao, game_id):
     try:
         game = find_game(game_id)
         game.flyto(icao)
-        game.location.generate_quests(game.turn)
+        game.location.generate_quests(game.turn, game)
         airport = game.location
-        response_json = json.dumps(
+        response_airports = []
+        response = [
             {"concert_status": airport.concert_here, "quest_status": airport.quest_dest, "icao": airport.icao,
              "latitude": airport.latitude, "longitude": airport.longitude, "name": airport.name,
-             "co2_consumed": game.co2_consumed, "failed_quests": game.failed_quests,
-             "active_quest_amount": len(game.quests), "turn": game.turn})
+             "co2 consumed": game.co2_consumed, "failed_quests": game.failed_quests,
+             "active_quest_amount": len(game.quests), "turn": game.turn, "money": game.money}]
+        for airport in game.airports:
+            response_airports.append({"Name": airport.name, "Icao": airport.icao, "Latitude": airport.latitude,
+                                      "Longitude": airport.longitude, "Concert_status": airport.concert_here,
+                                      "Is_quest_destination": airport.quest_dest})
+        response.append(response_airports)
+        response_json = json.dumps(response)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
         response_json = json.dumps({"message": "unknown icao or invalid parameters", "status": "400 Bad request"})
