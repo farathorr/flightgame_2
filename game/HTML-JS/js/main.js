@@ -10,7 +10,6 @@ map.setView([60, 24], 7);
 
 // global variables
 const apiUrl = 'http://127.0.0.1:5000/';
-const startLoc = 'EFHK'; // Add randomness!
 let gameId = '';
 let gameData = '';
 let availableQuests = []
@@ -18,9 +17,6 @@ const completedConcerts = [];
 const concerts = []
 let airports = [];
 const airportMarkers = L.featureGroup().addTo(map);
-let cq1active = false
-let cq2active = false
-let cq3active = false
 let questTaken = false
 let questList = []
 let status = []
@@ -53,9 +49,9 @@ async function getData(url) {
 }
 
 // function to get current quests
-async function currentQuests() {
-    return await getData(`${apiUrl}/${gameId}/currentquests`)
-}
+// async function currentQuests() {
+//     return await getData(`${apiUrl}/${gameId}/currentquests`)
+// }
 
 // function to fly to a new airport
 async function flyTo(dest_icao) {
@@ -86,8 +82,8 @@ async function flyTo(dest_icao) {
         // console.log(status.Icao)
         // console.log("Airport in gameSetup:")
         // console.log(airport)
-        checkForConcert(airport, concerts)
-        updateMap(airports)
+        // checkForConcert(airport, concerts)
+        updateMap()
     } catch
         (error) {
         console.log(error);
@@ -130,12 +126,15 @@ async function getQuest(questButton_value, quests, gameData) {
             let questposition = document.querySelector(positiontag)
             if (questposition.innerHTML === "Much Empty") {
                 let takenQuestData = await getData(`${apiUrl}/${gameId}/takequest/${questButton_value}`)
+                questList.push(takenQuestData)
                 console.log(`Taken Quest data:`)
                 console.log(takenQuestData)
                 let content = (`Destination: ` + takenQuestData.Name + `<br/>`) + (takenQuestData.Passenger_amount + ` passenger(s)` + `<br/>`) + (`Reward: ` + takenQuestData.Reward + `€` + `<br/>` + `Tehtävä umpeutuu vuorolla: ` + takenQuestData.Turn)
                 questposition.innerHTML = content
                 alert('Tehtävä hyväksytty')
                 questTaken = true
+                airports[getIndex(airports, quest.Icao)].Is_quest_destination = true
+                updateMap()
                 hideDialog()
                 return takenQuestData
             }
@@ -147,9 +146,17 @@ async function getQuest(questButton_value, quests, gameData) {
 }
 
 // function to complete quests // quest1, quest2, quest3, flight_destination, current_money
-function questComplete(airport, quests) {
-    if (airport.Quest_dest === true) {
-        getData(`${apiUrl}/${gameId}/completequest`)
+async function questComplete(airport, quests) {
+    if (airport.Is_quest_destination === true) {
+        let x = getIndex(questList, airport.Icao)
+        let positiontag = "#questposition" + (parseInt(x + 1))
+        let questposition = document.querySelector(positiontag)
+        questposition.innerHTML = "Much Empty"
+        let moneyAfterQuest = await getData(`${apiUrl}/${gameId}/completequest`)
+        console.log(moneyAfterQuest)
+        status.Money = moneyAfterQuest[0].Money
+        document.querySelector('#money').innerHTML = status.Money;
+        questList.pop([getIndex(questList, airport.Icao)])
     }
 }
 
@@ -174,12 +181,15 @@ function startStatus(status) {
 // function to update game status
 function updateStatus(gameData) {
     let newStatus = gameData[0]
+    console.log("Status2+:")
+    console.log(status)
     status.Co2_consumed = newStatus.Co2_consumed
     status.Money = newStatus.Money
     status.Turn = newStatus.Turn
     status.Name = newStatus.Name
     status.Latitude = newStatus.Latitude
     status.Longitude = newStatus.Longitude
+    status.Icao = newStatus.Icao
     document.querySelector('#consumed').innerHTML = newStatus.Co2_consumed;
     document.querySelector('#money').innerHTML = newStatus.Money;
     document.querySelector('#turn').innerHTML = newStatus.Turn;
@@ -207,17 +217,19 @@ async function watchConcert() {
 }
 
 // function to check if concert active in location
-function checkForConcert(airport, concerts) {
-    console.log("Airport from checkForConcert:")
-    console.log(airport)
+async function checkForConcert(airport) {
+    // console.log("Airport from checkForConcert:")
+    // console.log(airport)
     if (airport.Concert_status === true) {
         let concert = concerts[getIndex(concerts, airport.Icao)]
-        let participation_check = confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)
-        if (participation_check === true) {
+        // let participation_check = confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)
+        if (confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)) {
             let balance_check = (status.Money >= concert.Price)
             if (balance_check === true) {
-                checkConcerts(concert.Genre)
-                let concertData = watchConcert() // check what values needed
+                let concertData = await watchConcert() // check what values needed
+                concert.Concert_over = true
+                console.log("Concert Data")
+                console.log(concertData)
                 updateConcerts(concertData)
             } else {
                 alert('Rahasi eivät riitä konserttirannekkeeseen.')
@@ -232,7 +244,7 @@ function checkForConcert(airport, concerts) {
 
 // function to update goal data and goal table in UI
 // This is needed?!
-function updateConcerts(concerts) {
+function updateConcerts(completedConcert) {
     document.querySelector('#goals').innerHTML = '';
     for (let concert of concerts) {
         const li = document.createElement('li');
@@ -263,7 +275,7 @@ function checkGameOver(budget, quest_failed) {
 }
 
 // function to update map
-async function updateMap(airports) {
+async function updateMap() {
     for (let airport of airports) {
         const marker = L.marker([airport.Latitude, airport.Longitude]).addTo(map);
         airportMarkers.addLayer(marker);
@@ -276,7 +288,7 @@ async function updateMap(airports) {
             console.log("Airport in updateMap:")
             console.log(airport)
             checkForConcert(airport, concerts);
-            questComplete(airport.Icao, questList)
+            questComplete(airport, questList)
             marker.bindPopup(`You are here: <b>${airport.Name}</b>`);
             marker.openPopup();
             marker.setIcon(greenIcon);
@@ -293,7 +305,9 @@ async function updateMap(airports) {
             const p = document.createElement('p');
             let q_index = getIndex(questList, airport.Icao)
             let c_index = getIndex(concerts, airport.Icao)
-            p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[q_index].Turn}\nTäällä ${concerts[c_index].Genre} konsertti`;
+            console.log("Questlist:")
+            console.log(questList)
+            p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${questList[q_index].Turn}\nTäällä ${concerts[c_index].Genre} konsertti`;
             popupContent.append(p);
             marker.bindPopup(popupContent);
             goButton.addEventListener('click', async function () {
@@ -333,7 +347,9 @@ async function updateMap(airports) {
             popupContent.append(goButton);
             const p = document.createElement('p');
             let index = getIndex(questList, airport.Icao)
-            p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[index].Turn} `;
+            console.log("Questlist:")
+            console.log(questList)
+            p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${questList[index].Turn} `;
             popupContent.append(p);
             marker.bindPopup(popupContent);
             goButton.addEventListener('click', async function () {
@@ -391,7 +407,7 @@ async function gameSetup(url) {
         // console.log("Airport in gameSetup:")
         // console.log(airport)
         checkForConcert(airport, concerts)
-        updateMap(airports)
+        updateMap()
     } catch
         (error) {
         console.log(error);
@@ -475,4 +491,31 @@ questButton2.addEventListener("click", async function () {
 questButton3.addEventListener("click", async function () {
     let value = 2
     getQuest(value, availableQuests, gameData)
+})
+let fancy1 = document.querySelector("#fancy1")
+let fancy2 = document.querySelector("#fancy2")
+let fancy3 = document.querySelector("#fancy3")
+
+fancy1.addEventListener("click", function () {
+    let questposition = document.querySelector("#questposition1")
+    if (questposition.innerHTML !== "Much Empty") {
+        let questAirport = airports[getIndex(airports, questList[0].Icao)]
+        map.flyTo([questAirport.Latitude, questAirport.Longitude], 10)
+    }
+})
+
+fancy2.addEventListener("click", function () {
+    let questposition = document.querySelector("#questposition2")
+    if (!questposition.innerHTML !== "Much Empty") {
+        let questAirport = airports[getIndex(airports, questList[1].Icao)]
+        map.flyTo([questAirport.Latitude, questAirport.Longitude], 10)
+    }
+})
+
+fancy3.addEventListener("click", function () {
+    let questposition = document.querySelector("#questposition3")
+    if (!questposition.innerHTML !== "Much Empty") {
+        let questAirport = airports[getIndex(airports, questList[2].Icao)]
+        map.flyTo([questAirport.Latitude, questAirport.Longitude], 10)
+    }
 })
