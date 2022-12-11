@@ -48,6 +48,42 @@ async function getData(url) {
     return data;
 }
 
+// function to get upgrade price // FIX PRICING!!!
+function getPrice(type, level) {
+    if (level === 1) {
+        return 500
+    } else if (level === 2) {
+        return 750
+    } else if (level === 3) {
+        return 1500
+    }
+}
+
+// function to upgrade
+async function getUpgrade(type, level) {
+    if (level === 4) {
+        return alert(`${type} taso on maksimissa`)
+    }
+    let price = getPrice(type, level)
+    if (type === "Matkustajapaikat" && status.Money >= price) {
+        if (confirm(`Seuraava matkustajapaikka taso maksaa ${price}€`)) {
+            let upgradeData = await getData(`${apiUrl}/${gameId}/upgradepsngr`)
+            status.Current_passengerlvl = upgradeData.Psngrlvl
+            status.Money = upgradeData.Money
+            document.querySelector("#passenger").innerHTML = (status.Current_passengerlvl + 1)
+            document.querySelector("#money").innerHTML = status.Money
+        }
+    } else if (type === "Co2 suodatin" && status.Money >= price) {
+        if (confirm(`Seuraava CO2 suodatin taso maksaa ${price}€`)) {
+            let upgradeData = await getData(`${apiUrl}/${gameId}/upgradeco2`)
+            status.Current_co2lvl = upgradeData.Co2lvl
+            status.Money = upgradeData.Money
+            document.querySelector("#co_level").innerHTML = status.Current_co2lvl
+            document.querySelector("#money").innerHTML = status.Money
+        }
+    }
+}
+
 // function to get current quests
 // async function currentQuests() {
 //     return await getData(`${apiUrl}/${gameId}/currentquests`)
@@ -518,4 +554,12 @@ fancy3.addEventListener("click", function () {
         let questAirport = airports[getIndex(airports, questList[2].Icao)]
         map.flyTo([questAirport.Latitude, questAirport.Longitude], 10)
     }
+})
+let co2Upgrade = document.querySelector("#upgradeco2")
+let passengerUpgrade = document.querySelector("#upgradepass")
+co2Upgrade.addEventListener("click", function () {
+    getUpgrade("Co2 suodatin", (status.Current_co2lvl + 1))
+})
+passengerUpgrade.addEventListener("click", function () {
+    getUpgrade("Matkustajapaikat", (status.Current_passengerlvl + 1))
 })
