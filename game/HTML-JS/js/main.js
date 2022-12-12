@@ -284,6 +284,7 @@ async function checkForConcert(airport) {
       if (balance_check === true) {
         let concertData = await watchConcert(); // check what values needed
         concert.Concert_over = true;
+        new Audio('audio/concert_complete.mp3').play()
         console.log('Concert Data');
         console.log(concertData);
         updateConcerts();
