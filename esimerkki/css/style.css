@@ -315,6 +315,18 @@ button{
   border: 5px solid rgba(255, 255, 255, 0.5);
 }
 
+.red-icon {
+  background-color: #ba2727;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.5);
+}
+
+.magenta-icon {
+  background-color: #9527ba;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.5);
+}
+
 #myquest{
   display: none;
   width: auto;
@@ -328,5 +340,29 @@ button{
 #genret{
   display: block;
   width: auto;
+}
 
+dialog {
+  position: fixed;
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+  display: block;
+}
+
+dialog[open] {
+  opacity: 1;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.8);
+}
+
+dialog span {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  font-size: 2rem;
+  text-decoration: none;
+  color: #fff;
+  filter: drop-shadow(2px 2px 2px #000);
 }

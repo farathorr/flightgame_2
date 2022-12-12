@@ -203,12 +203,18 @@ function hidevalitse() {
 
 }
 */
-function myFunction() {
-  var txt;
-  if (confirm("Press a button!")) {
-    txt = "You pressed OK!";
-  } else {
-    txt = "You pressed Cancel!";
-  }
-  document.getElementById("demo").innerHTML = txt;
+
+const dialog = document.querySelector('dialog')
+const dialog_img = document.querySelector('dialog img')
+for (let x in picArray) {
+    let article = document.querySelectorAll('article')[x]
+    article.addEventListener('click', function (evt) {
+        dialog_img.setAttribute('src', picArray[x].image.large)
+        dialog_img.setAttribute('alt', picArray[x].title)
+        dialog.showModal()
+    })
 }
+const span = document.querySelector('span')
+span.addEventListener('click', function (evt) {
+    dialog.close()
+})
