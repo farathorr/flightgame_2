@@ -149,7 +149,6 @@ async function flyTo(dest_icao) {
         updateStatus(gameData);
         checkIfQuestFailed()
         checkGameOver()
-        gameWon()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
         // console.log(status.Icao)
@@ -324,6 +323,7 @@ async function checkForConcert(airport) {
                 status.Money = concertData.Money
                 document.querySelector('#money').innerHTML = status.Money
                 updateConcerts();
+                gameWon()
             } else {
                 alert('Rahasi eivät riitä konserttirannekkeeseen.');
             }
