@@ -406,7 +406,7 @@ async function updateMap() {
       h4.innerHTML = airport.Name;
       popupContent.append(h4);
       const goButton = document.createElement('button');
-      goButton.classList.add('button');
+      goButton.classList.add('flybutton');
       goButton.innerHTML = 'Fly here';
       popupContent.append(goButton);
       const p = document.createElement('p');
@@ -426,7 +426,7 @@ async function updateMap() {
       h4.innerHTML = airport.Name;
       popupContent.append(h4);
       const goButton = document.createElement('button');
-      goButton.classList.add('button');
+      goButton.classList.add('flybutton');
       goButton.innerHTML = 'Fly here';
       popupContent.append(goButton);
       // const p = document.createElement('p');
