@@ -3,6 +3,7 @@ import geopy
 from plane_class import Plane
 from geopy import distance
 from airport_class import *
+from concert_class import generate_concerts
 
 
 def get_data(icao, game):
@@ -18,9 +19,9 @@ class Game:
         self.co2_budget = budget  # if consumed goes over budget, game over
         self.co2_consumed = consumed
         self.failed_quests = failed  # if more than 3 failed, game over
-        self.concerts_watched = []  # if 6, you won the game
-        self.concerts = []
+        self.concerts_watched = 0  # if 6, you won the game
         self.airports = generate_airports()
+        self.concerts = []
         self.location = self.airports[random.randint(0, len(self.airports))]
         self.plane = Plane()
         self.turn = 1
@@ -34,16 +35,14 @@ class Game:
         consumption = distance * self.plane.get_co2mod()
         self.location.quests = []
         self.location = dest
+        self.location.generate_quests(self.turn, self)
         self.co2_consumed += consumption
         self.turn += 1
-        for selected_quest in self.quests:
-            if selected_quest.turn < self.turn:
-                self.quests.remove(selected_quest)
+        for quest in self.quests:
+            if self.turn > quest.turn:
+                quest.destination.quest_dest = False
+                self.quests.remove(quest)
                 self.failed_quests += 1
-                for airport in self.airports:
-                    if airport.icao == selected_quest.icao:
-                        airport.guest_dest = False
-        self.location.generate_quests(self.turn, self)
 
     def take_quest(self, quest_num):
         selected_quest = self.location.quests[quest_num]
@@ -64,11 +63,8 @@ class Game:
 
     def watch_concert(self):
         for concert in self.concerts:
-            if concert.concert_over:
-                return
-            else:
-                if self.location.icao == concert.icao:
-                    self.concerts_watched.append(concert.genre)
-                    self.money = self.money - concert.price
-                    concert.concert_over = True
-                    self.location.concert_here = False
+            if self.location.icao == concert.icao:
+                self.concerts_watched = self.concerts_watched + 1
+                self.money = self.money - concert.price
+                concert.concert_over = True
+                self.location.concert_here = False
