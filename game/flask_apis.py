@@ -1,10 +1,13 @@
 from flask import Flask, request, Response, json
 from flask_cors import CORS
+from dotenv import load_dotenv
 from airport_class import generate_airports, Airport
 from concert_class import generate_concerts, Concert
 from quest_class import *
 from game_class import Game
 from geopy.distance import geodesic as GD
+
+load_dotenv()
 
 app = Flask(__name__)
 cors = CORS(app)
