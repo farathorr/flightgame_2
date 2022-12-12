@@ -315,8 +315,9 @@ async function checkForConcert(airport) {
             `Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}€`)) {
             let balance_check = (status.Money >= concert.Price);
             if (balance_check === true) {
+                concert.Concert_over = true;
+                airport.Concert_status = false
                 let concertData = await watchConcert(); // check what values needed
-                concert.Concert_over = false;
                 new Audio('audio/concert_complete.mp3').play()
                 console.log('Concert Data');
                 console.log(concertData);
