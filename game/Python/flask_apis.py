@@ -42,7 +42,7 @@ def start_game():
         response_concerts = []
         response = [{"Id": game.id, "Money": game.money, "Co2_budget": game.co2_budget,
                      "Co2_consumed": game.co2_consumed, "Quests_failed":
-                         game.failed_quests, "Concerts_watched": len(game.concerts_watched),
+                         game.failed_quests, "Concerts_watched": game.concerts_watched,
                      "Latitude": game.location.latitude, "Longitude": game.location.longitude,
                      "Icao": game.location.icao, "Turn": game.turn, "Current_co2lvl": game.plane.co2level,
                      "Current_passengerlvl": game.plane.psngrlvl, "Name": game.location.name}]
