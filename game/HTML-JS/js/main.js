@@ -279,7 +279,7 @@ async function checkForConcert(airport) {
     let concert = concerts[getIndex(concerts, airport.Icao)];
     // let participation_check = confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)
     if (confirm(
-        `Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)) {
+        `Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}€`)) {
       let balance_check = (status.Money >= concert.Price);
       if (balance_check === true) {
         let concertData = await watchConcert(); // check what values needed
