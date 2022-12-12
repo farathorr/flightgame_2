@@ -16,6 +16,17 @@
   transition: all 300ms;
   gap: 3rem;
 }
+
+button{
+  margin-bottom: 0.5rem;
+  justify-content: center;
+  width:32%;
+  font-size: 5mm;
+  color: #333333;
+  margin-right: 0.5rem;
+
+}
+
 #t_button{
   margin-left: 1rem;
   width:auto;
@@ -62,6 +73,13 @@
   align-items: flex-start;
 
 }
+.flex-wrap-port {
+  display: flex;
+  flex-wrap: wrap;
+  width: 30%;
+  align-items: flex-start;
+
+}
 .aqcolumn{
   width: 100%;
 }
@@ -88,7 +106,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: Bahnschrift, CSS Fonts, serif;
   background-color: var(--white);
   scroll-behavior: smooth;
 }
@@ -262,15 +280,7 @@ main {
   background-color: whitesmoke;
 
 }
-button{
-  margin-bottom: 0.5rem;
-  justify-content: center;
-  width:32%;
-  font-size: 7mm;
-  color: #333333;
-  margin-right: 0.5rem;
 
-}
 
 .paiv{
   margin-bottom: 0.5rem;
@@ -429,9 +439,10 @@ dialog span {
   padding-left: 10px;
 }
 .textp{
-    text-align: left;
+  text-align: left;
   padding-bottom: 15px;
   padding-left: 10px;
+
 }
 #consumed{
   text-align: start;
@@ -457,7 +468,6 @@ tr{
   color: #36395A;
   cursor: pointer;
   display: inline-flex;
-  font-family: "JetBrains Mono",monospace;
   height: 48px;
   justify-content: center;
   line-height: 1;
@@ -501,9 +511,7 @@ tr{
   color: #FFFFFF;
   cursor: pointer;
   display: inline-block;
-  font-family: din-round,sans-serif;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 20px;
   letter-spacing: 2px;
   line-height: 20px;
   margin-left: 7px;
@@ -511,7 +519,6 @@ tr{
   overflow: visible;
   padding: 13px 16px;
   text-align: center;
-  text-transform: uppercase;
   touch-action: manipulation;
   transform: translateZ(0);
   transition: filter .2s;
@@ -560,10 +567,6 @@ tr{
   border-radius: .5rem;
   box-sizing: border-box;
   color: #111827;
-  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  font-size: .875rem;
-  font-weight: 600;
-  line-height: 1.25rem;
   padding: .75rem 1rem;
   text-align: center;
   text-decoration: none #D1D5DB solid;
@@ -593,10 +596,6 @@ tr{
   border-radius: .5rem;
   box-sizing: border-box;
   color: #111827;
-  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-  font-size: .875rem;
-  font-weight: 600;
-  line-height: 1.25rem;
   padding: .75rem 1rem;
   text-align: center;
   text-decoration: none #D1D5DB solid;
@@ -623,7 +622,6 @@ tr{
   box-sizing: border-box;
   color: #1A202C;
   display: inline-flex;
-  font-family: Inter, sans-serif;
   font-size: 1rem;
   font-weight: 700;
   justify-content: center;
@@ -631,6 +629,7 @@ tr{
   overflow-wrap: break-word;
   padding: 24px;
   text-decoration: none;
+  font-family: Bahnschrift, CSS Fonts, serif;
   width: auto;
   border-radius: 8px;
   cursor: pointer;
