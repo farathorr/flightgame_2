@@ -299,7 +299,7 @@ button{
 }
 
 .done {
-  background-color: var(--grey);
+  background-color: rgba(110,162,86,0.91);
 }
 
 #weather {
