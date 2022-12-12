@@ -178,8 +178,8 @@ async function getQuest(questButton_value, quests) {
 
 // function to complete quests // quest1, quest2, quest3, flight_destination, current_money
 async function questComplete(airport) {
-    console.log("Questlist:")
-    console.log(questList)
+    // console.log("Questlist:")
+    // console.log(questList)
     if (airport.Is_quest_destination === true) {
         airport.Is_quest_destination = false
         let moneyAfterQuest = await getData(`${apiUrl}/${gameId}/completequest`);
@@ -257,8 +257,8 @@ async function checkForConcert(airport) {
                 airport.Concert_status = false
                 let concertData = await watchConcert(); // check what values needed
                 new Audio('audio/concert_complete.mp3').play()
-                console.log('Concert Data');
-                console.log(concertData);
+                // console.log('Concert Data');
+                // console.log(concertData);
                 status.Money = concertData.Money
                 document.querySelector('#money').innerHTML = status.Money
                 updateConcerts();
@@ -274,7 +274,8 @@ async function checkForConcert(airport) {
 function updateConcerts() {
     document.querySelector('#goals').innerHTML = '';
     for (let concert of concerts) {
-        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.classList.add('button-38')
         const figure = document.createElement('figure');
         const img = document.createElement('img');
         const figcaption = document.createElement('figcaption');
@@ -283,18 +284,18 @@ function updateConcerts() {
         figcaption.innerHTML = concert.Genre;
         figure.append(img);
         figure.append(figcaption);
-        li.append(figure);
-        li.addEventListener('click', function () {
+        button.append(figure);
+        button.addEventListener('click', function () {
             let concertAirport = airports[getIndex(airports, concert.Icao)];
             map.flyTo([concertAirport.Latitude, concertAirport.Longitude], 10);
         })
         if (concert.Concert_over) { // Check this later together!!!
-            li.classList.add('done');
+            button.classList.add('done');
             img.src = 'img/icons8-music-200.png';
             completedConcerts.includes(concert.Genre) ||
             completedConcerts.push(concert.Genre);
         }
-        document.querySelector('#goals').append(li);
+        document.querySelector('#goals').append(button);
     }
 }
 
@@ -328,24 +329,45 @@ function refreshPage() {
 }
 
 // function to check if game won
-function gameWon() {
+async function gameWon() {
     if (completedConcerts.length >= 6) {
         let score = (status.Co2_budget - status.Co2_consumed + status.Money - status.Turn * 200)
         let name = prompt(`Onneksi olkoon onnistuit käymään kaikissa konserteissa!\nSait ${score} pistettä \n Syötä nimesi tallentaaksesi lopputuloksen`)
         if (name !== '') {
-            getData(`${apiUrl}/${gameId}/score/${name}/${score}`)
+            let topscores = await getData(`${apiUrl}/${gameId}/score/${name}/${score}`)
+            console.log("Topscores:")
+            console.log(topscores)
+
+            airportMarkers.clearLayers();
+            let dialog = document.querySelector("dialog").innerHTML = ''
+            dialog = document.querySelector("dialog")
+            let button = document.createElement("button")
+            button.classList.add('resetbutton')
+            button.innerText = "Pelaa uudelleen"
+            button.addEventListener('click', function () {
+                refreshPage()
+            })
+            for (let topscore of topscores) {
+                let li = document.createElement('li')
+                li.classList.add('topscore')
+                li.innerHTML = `${topscore[0]} pistettä`
+                dialog.append(li)
+            }
+            dialog.append(button)
+            dialog.showModal()
+        } else {
+            airportMarkers.clearLayers();
+            let dialog = document.querySelector("dialog").innerHTML = ''
+            dialog = document.querySelector("dialog")
+            let button = document.createElement("button")
+            button.classList.add('resetbutton')
+            button.innerText = "Pelaa uudelleen"
+            button.addEventListener('click', function () {
+                refreshPage()
+            })
+            dialog.append(button)
+            dialog.showModal()
         }
-        airportMarkers.clearLayers();
-        let dialog = document.querySelector("dialog").innerHTML = ''
-        dialog = document.querySelector("dialog")
-        let button = document.createElement("button")
-        button.classList.add('resetbutton')
-        button.innerText = "Pelaa uudelleen"
-        button.addEventListener('click', function () {
-            refreshPage()
-        })
-        dialog.append(button)
-        dialog.showModal()
     }
 }
 
@@ -399,8 +421,8 @@ async function updateMap() {
                 flyTo(airport.Icao);
             });
         } else if (airport.Is_quest_destination) {
-            console.log("Airport with quest destination status")
-            console.log(airport)
+            // console.log("Airport with quest destination status")
+            // console.log(airport)
             marker.setIcon(redIcon);
             const popupContent = document.createElement('div');
             const h4 = document.createElement('h4');
@@ -498,7 +520,7 @@ span.addEventListener('click', hideDialog);
 
 function showDialog() {
     if (!questTaken) {
-        console.log('Modal Opened');
+        // console.log('Modal Opened');
         dialog.showModal();
     } else {
         alert('Olet ottanut jo tehtävän tällä vuorolla');
@@ -506,7 +528,7 @@ function showDialog() {
 }
 
 function hideDialog() {
-    console.log('Modal Closed');
+    // console.log('Modal Closed');
     dialog.close();
 }
 
