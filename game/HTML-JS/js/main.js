@@ -321,6 +321,8 @@ async function checkForConcert(airport) {
                 new Audio('audio/concert_complete.mp3').play()
                 console.log('Concert Data');
                 console.log(concertData);
+                status.Money = concertData.Money
+                document.querySelector('#money').innerHTML = status.Money
                 updateConcerts();
             } else {
                 alert('Rahasi eivät riitä konserttirannekkeeseen.');
