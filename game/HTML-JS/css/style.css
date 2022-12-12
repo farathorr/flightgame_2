@@ -92,7 +92,9 @@ body {
   background-color: var(--white);
   scroll-behavior: smooth;
 }
-
+.flybutton{
+  width: 40%;
+}
 .container {
   width: 100%;
   position: relative;
