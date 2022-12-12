@@ -98,6 +98,10 @@ body {
 h4{
   font-size: 0.5cm;
 }
+h4 p{
+  font-size: 0.3cm;
+}
+
 .container {
   width: 100%;
   position: relative;
@@ -295,7 +299,7 @@ button{
 }
 
 .done {
-  background-color: var(--grey);
+  background-color: rgba(110,162,86,0.91);
 }
 
 #weather {
