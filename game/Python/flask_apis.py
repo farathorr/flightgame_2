@@ -229,7 +229,7 @@ def add_score_sql(game_id, score, name):
             cursor.execute(sql)
             response = []
             for i in range(5):
-                sql = f"select score, player_name from top_score group by score order by score desc limit {i},1"
+                sql = f"select player_name, score  from top_score group by score order by score desc limit {i},1"
                 cursor = connection.cursor()
                 cursor.execute(sql)
                 response.append(cursor.fetchall())
