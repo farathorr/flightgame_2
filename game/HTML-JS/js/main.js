@@ -48,7 +48,7 @@ async function getData(url) {
     return data;
 }
 
-// function to get upgrade price // FIX PRICING!!!
+// function to get upgrade price
 function getPrice(type, level) {
     if (level === 1) {
         return 500;
@@ -58,6 +58,7 @@ function getPrice(type, level) {
         return 1500;
     }
 }
+
 
 // function to upgrade
 async function getUpgrade(type, level) {
@@ -91,8 +92,9 @@ async function getUpgrade(type, level) {
 
 // function to fail quest
 function questFail() {
+    questList.splice(0, 1)
     alert("Tehtävän aika raja on mennyt umpeen")
-
+    updateQuests()
 }
 
 // function to updateQuests
@@ -104,7 +106,7 @@ function updateQuests() {
     document.querySelector('#questposition3').innerHTML = 'Much Empty'
     if (questList.length > 0) {
         for (let i = 0; i < questList.length; i++) {
-            let positiontag = '#questposition' + (parseInt(i+1));
+            let positiontag = '#questposition' + (parseInt(i + 1));
             let questposition = document.querySelector(positiontag);
             if (questposition.innerHTML === 'Much Empty') {
                 let content = (`Destination: ` + questList[i].Name + `<br/>`) +
@@ -121,8 +123,8 @@ function updateQuests() {
 // function to fly to a new airport
 async function flyTo(dest_icao) {
     try {
-        console.log("Completed Concerts:")
-        console.log(completedConcerts)
+        // console.log("Completed Concerts:")
+        // console.log(completedConcerts)
         questTaken = false;
         // console.log(gameId)
         airports = [];
@@ -133,8 +135,8 @@ async function flyTo(dest_icao) {
         }
         // console.log("GAMEDATA 2.0:")
         // console.log(gameData)
-        console.log("Game Data:")
-        console.log(gameData);
+        // console.log("Game Data:")
+        // console.log(gameData);
         for (let i = 0; i < gameData[1].length; i++) {
             airports.push(gameData[1][i]);
         }
@@ -145,6 +147,8 @@ async function flyTo(dest_icao) {
         // console.log(concerts)
         // console.log(concerts[0])
         updateStatus(gameData);
+        checkIfQuestFailed()
+        // checkGameOver()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
         // console.log(status.Icao)
@@ -194,8 +198,8 @@ async function getQuest(questButton_value, quests) {
                 let takenQuestData = await getData(
                     `${apiUrl}/${gameId}/takequest/${questButton_value}`);
                 questList.push(takenQuestData);
-                console.log(`Taken Quest data:`);
-                console.log(takenQuestData);
+                // console.log(`Taken Quest data:`);
+                // console.log(takenQuestData);
                 let content = (`Destination: ` + takenQuestData.Name + `<br/>`) +
                     (takenQuestData.Passenger_amount + ` passenger(s)` + `<br/>`) +
                     (`Reward: ` + takenQuestData.Reward + `€` + `<br/>` +
@@ -222,27 +226,31 @@ async function questComplete(airport) {
     if (airport.Is_quest_destination === true) {
         airport.Is_quest_destination = false
         let moneyAfterQuest = await getData(`${apiUrl}/${gameId}/completequest`);
-        console.log(moneyAfterQuest);
+        // console.log(moneyAfterQuest);
         alert(
             `Olet suorittanut tehtävän ja saanut palkkioksi:${moneyAfterQuest[0].Money -
             status.Money}€`);
         status.Money = moneyAfterQuest[0].Money;
         document.querySelector('#money').innerHTML = status.Money;
-        questList.splice(getIndex(questList, airport.Icao),1);
+        questList.splice(getIndex(questList, airport.Icao), 1);
         updateQuests()
         new Audio('audio/quest_complete.mp3').play()
     }
 }
 
 // function to check if quest failed
-// function checkIfQuestFailed(turn, quests, failed_quests) {
-//     getData(`${apiUrl}/${gameId}/ check if quest failed url`)
-// }
+function checkIfQuestFailed() {
+    if (questList.length > 0) {
+        if (questList[0].Turn < status.Turn) {
+            questFail()
+        }
+    }
+}
 
 // function to get starting status
 function startStatus(status) {
-    console.log('Status:');
-    console.log(status);
+    // console.log('Status:');
+    // console.log(status);
     document.querySelector('#consumed').innerHTML = status.Co2_consumed;
     document.querySelector('#budget').innerHTML = status.Co2_budget;
     document.querySelector('#money').innerHTML = status.Money;
@@ -256,8 +264,8 @@ function startStatus(status) {
 // function to update game status
 function updateStatus(gameData) {
     let newStatus = gameData[0];
-    console.log('Status2+:');
-    console.log(status);
+    // console.log('Status2+:');
+    // console.log(status);
     status.Co2_consumed = newStatus.Co2_consumed;
     status.Money = newStatus.Money;
     status.Turn = newStatus.Turn;
@@ -354,13 +362,26 @@ function updateConcerts() {
 }
 
 // function to check if game is over
-function checkGameOver(budget, quest_failed) {
-    if (budget <= 0) {
-        alert(`Game Over. ${completedConcerts.length} concerts visited.`);
-        return false;
-    }
-    return true;
-}
+// function checkGameOver() {
+//     let reason = ''
+//     if (status.Co2_consumed > status.Co2_budget) {
+//         reason = "CO2 päästöt ylittivät sallitun budjetin"
+//     } else if (status.Quests_failed <= 3) {
+//         reason = "epäonnistuit liian monta tehtävää"
+//     }
+//     if (reason !== '') {
+//         airportMarkers.clearLayers();
+//         alert(`Peli ohi ${completedConcerts.length} konsertissa käyty. \nSyy epäonnistumiseen: ${reason}`);
+//         let dialog = document.querySelector("dialog").innerHTML = ''
+//         let button = document.createElement("button")
+//         let a = document.createElement("a")
+//         button.innerText = "Yritä uudelleen?"
+//         button.onclick = "window.location.reload();"
+//         dialog.append(button)
+//         dialog.showModal()
+//     }
+// }
+// <button onClick="window.location.reload();">Refresh Page</button>
 
 // function to update map
 async function updateMap() {
@@ -373,8 +394,8 @@ async function updateMap() {
         if (airport.Icao === status.Icao) {
             map.flyTo([airport.Latitude, airport.Longitude], 10);
             // showWeather(airport);
-            console.log('Airport in updateMap:');
-            console.log(airport);
+            // console.log('Airport in updateMap:');
+            // console.log(airport);
             checkForConcert(airport, concerts);
             questComplete(airport);
             marker.bindPopup(`You are here: <b>${airport.Name}</b>`);
@@ -400,6 +421,8 @@ async function updateMap() {
                 flyTo(airport.Icao);
             });
         } else if (airport.Concert_status) {
+            // console.log("Airport with Concert status")
+            // console.log(airport)
             marker.setIcon(blueIcon);
             const popupContent = document.createElement('div');
             const h4 = document.createElement('h4');
@@ -422,6 +445,8 @@ async function updateMap() {
                 flyTo(airport.Icao);
             });
         } else if (airport.Is_quest_destination) {
+            console.log("Airport with quest destination status")
+            console.log(airport)
             marker.setIcon(redIcon);
             const popupContent = document.createElement('div');
             const h4 = document.createElement('h4');
@@ -468,8 +493,8 @@ async function gameSetup(url) {
     try {
         airportMarkers.clearLayers();
         gameData = await getData(url);
-        console.log('Game Data:');
-        console.log(gameData);
+        // console.log('Game Data:');
+        // console.log(gameData);
         gameId = gameData[0].Id;
         for (let i = 0; i < gameData[2].length; i++) {
             airports.push(gameData[2][i]);
