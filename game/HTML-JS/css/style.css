@@ -73,6 +73,13 @@ button{
   align-items: flex-start;
 
 }
+.flex-wrap-port {
+  display: flex;
+  flex-wrap: wrap;
+  width: 30%;
+  align-items: flex-start;
+
+}
 .aqcolumn{
   width: 100%;
 }
