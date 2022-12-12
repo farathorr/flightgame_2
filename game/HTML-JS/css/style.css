@@ -644,3 +644,11 @@ tr{
 .resetbutton {
   width: 100%;
 }
+.topscore{
+  font-size: 7mm;
+  justify-content: center;
+  font-family: Bahnschrift, CSS Fonts, serif;
+  padding: 0.1rem;
+  margin: auto;
+  list-style-type: none;
+}
