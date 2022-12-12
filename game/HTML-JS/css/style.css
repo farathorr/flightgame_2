@@ -241,7 +241,7 @@ main {
 }
 
 .btn-group button {
-  background-color: gray; /* Green background */
+  background-color: rgba(188,183,184,0.91); /* Green background */
   border: 1px solid black; /* Green border */
   color: black; /* White text */
   padding: 10px 24px; /* Some padding */
@@ -259,7 +259,7 @@ main {
 
 /* Add a background color on hover */
 .btn-group button:hover {
-  background-color: #4a4848;
+  background-color: rgba(145,140,141,0.91);
 
 }
 button{
@@ -301,7 +301,7 @@ button{
 }
 
 .done {
-  background-color: var(--grey);
+  background-color: rgba(110,162,86,0.91);
 }
 
 #weather {
