@@ -20,7 +20,7 @@ def generate_concerts(game):
         rnd_int = random.randint(0, len(game.airports) - 1)
         if not game.airports[rnd_int].concert_here:
             game.airports[rnd_int].concert_here = True
-            genre = genre_request()
+            genre = genre_request().capitalize()
             if genre is None:
                 for default in default_genres:
                     concerts_list.append(Concert(default, game.airports[rnd_int].icao))
