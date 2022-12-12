@@ -148,7 +148,7 @@ async function flyTo(dest_icao) {
         // console.log(concerts[0])
         updateStatus(gameData);
         checkIfQuestFailed()
-        // checkGameOver()
+        checkGameOver()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
         // console.log(status.Icao)
@@ -362,25 +362,32 @@ function updateConcerts() {
 }
 
 // function to check if game is over
-// function checkGameOver() {
-//     let reason = ''
-//     if (status.Co2_consumed > status.Co2_budget) {
-//         reason = "CO2 päästöt ylittivät sallitun budjetin"
-//     } else if (status.Quests_failed <= 3) {
-//         reason = "epäonnistuit liian monta tehtävää"
-//     }
-//     if (reason !== '') {
-//         airportMarkers.clearLayers();
-//         alert(`Peli ohi ${completedConcerts.length} konsertissa käyty. \nSyy epäonnistumiseen: ${reason}`);
-//         let dialog = document.querySelector("dialog").innerHTML = ''
-//         let button = document.createElement("button")
-//         let a = document.createElement("a")
-//         button.innerText = "Yritä uudelleen?"
-//         button.onclick = "window.location.reload();"
-//         dialog.append(button)
-//         dialog.showModal()
-//     }
-// }
+function checkGameOver() {
+    let reason = ''
+    if (status.Co2_consumed > status.Co2_budget) {
+        reason = "CO2 päästöt ylittivät sallitun budjetin"
+    } else if (status.Quests_failed <= 3) {
+        reason = "Epäonnistuit liian monta tehtävää"
+    }
+    if (reason !== '') {
+        airportMarkers.clearLayers();
+        alert(`Peli ohi! \n${completedConcerts.length} konsertissa käyty. \nSyy epäonnistumiseen: ${reason}`);
+        let dialog = document.querySelector("dialog").innerHTML = ''
+        dialog = document.querySelector("dialog")
+        let button = document.createElement("button")
+        button.classList.add('resetbutton')
+        button.innerText = "Yritä uudelleen?"
+        button.addEventListener('click', function (){
+            refreshPage()
+        })
+        dialog.append(button)
+        dialog.showModal()
+    }
+}
+// function to refresh page
+function refreshPage(){
+    window.location.reload();
+}
 // <button onClick="window.location.reload();">Refresh Page</button>
 
 // function to update map
