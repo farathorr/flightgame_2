@@ -219,6 +219,27 @@ def upgrade_psngr(game_id):
         return Response(response=response_json, status=400, mimetype="application/json")
 
 
+@app.route("/<game_id>/score/<name>/<score>")
+def add_score_sql(game_id, score, name):
+    try:
+        game = find_game(game_id)
+        if game in games:
+            sql = f"INSERT INTO top_score VALUES('{name}', {score})"
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            response = []
+            for i in range(5):
+                sql = f"select score, player_name from top_score group by score order by score desc limit {i},1"
+                cursor = connection.cursor()
+                cursor.execute(sql)
+                response.append(cursor.fetchall())
+            response_json = json.dumps(response)
+            return Response(response=response_json, status=200, mimetype="application/json")
+    except TypeError:
+        response_json = json.dumps({"message": "invalid id", "status": "400 Bad request"})
+        return Response(response=response_json, status=400, mimetype="application/json")
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     response_json = json.dumps({"error": str(error)})

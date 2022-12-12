@@ -72,12 +72,3 @@ class Game:
                     self.money = self.money - concert.price
                     concert.concert_over = True
                     self.location.concert_here = False
-
-
-game = Game()
-print("Starting money", game.money)
-game.location.generate_quests(game.turn, game)
-game.take_quest(0)
-game.flyto(game.quests[0].icao)
-game.return_quest()
-print("New money", game.money)
