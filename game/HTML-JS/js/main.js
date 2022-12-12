@@ -146,10 +146,10 @@ async function flyTo(dest_icao) {
         // console.log("Concerts:")
         // console.log(concerts)
         // console.log(concerts[0])
+        checkForConcert(airport, concerts);
         updateStatus(gameData);
         checkIfQuestFailed()
         checkGameOver()
-        gameWon()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
         // console.log(status.Icao)
@@ -321,6 +321,7 @@ async function checkForConcert(airport) {
                 console.log('Concert Data');
                 console.log(concertData);
                 updateConcerts();
+                gameWon()
             } else {
                 alert('Rahasi eivät riitä konserttirannekkeeseen.');
             }
@@ -427,7 +428,6 @@ async function updateMap() {
             // showWeather(airport);
             // console.log('Airport in updateMap:');
             // console.log(airport);
-            checkForConcert(airport, concerts);
             questComplete(airport);
             marker.bindPopup(`You are here: <b>${airport.Name}</b>`);
             marker.openPopup();
