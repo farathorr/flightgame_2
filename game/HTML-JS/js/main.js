@@ -27,17 +27,6 @@ const greenIcon = L.divIcon({className: 'green-icon'}); // For basic
 const redIcon = L.divIcon({className: 'red-icon'}); // For Quest
 const magentaIcon = L.divIcon({className: 'magenta-icon'}); // For Quest + Concert
 
-// form for player name
-// Might add this!
-// Game would start here
-
-// document.querySelector('#player-form').addEventListener('submit', function (evt) {
-//   evt.preventDefault();
-//   const playerName = document.querySelector('#player-input').value;
-//   document.querySelector('#player-modal').classList.add('hide');
-//   gameSetup(`${apiUrl}newgame?player=${playerName}&loc=${startLoc}`);
-// });
-
 gameSetup(`${apiUrl}/start/`); // add starting quests
 
 // function to fetch data from API
@@ -99,8 +88,6 @@ function questFail() {
 
 // function to updateQuests
 function updateQuests() {
-    // console.log("Questlist length:")
-    // console.log(questList.length)
     document.querySelector('#questposition1').innerHTML = 'Much Empty'
     document.querySelector('#questposition2').innerHTML = 'Much Empty'
     document.querySelector('#questposition3').innerHTML = 'Much Empty'
@@ -123,60 +110,33 @@ function updateQuests() {
 // function to fly to a new airport
 async function flyTo(dest_icao) {
     try {
-        // console.log("Completed Concerts:")
-        // console.log(completedConcerts)
         questTaken = false;
-        // console.log(gameId)
         airports = [];
         airportMarkers.clearLayers();
         gameData = await getData(`${apiUrl}/${gameId}/flyto/${dest_icao}`);
         if (gameData[0].Quest_status === false) {
             new Audio('audio/flying_sound.mp3').play()
         }
-        // console.log("GAMEDATA 2.0:")
-        // console.log(gameData)
-        // console.log("Game Data:")
-        // console.log(gameData);
         for (let i = 0; i < gameData[1].length; i++) {
             airports.push(gameData[1][i]);
         }
-        // console.log("Airports:")
-        // console.log(airports)
-        // console.log(airports[0])
-        // console.log("Concerts:")
-        // console.log(concerts)
-        // console.log(concerts[0])
         updateStatus(gameData);
         checkIfQuestFailed()
         checkGameOver()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
-        // console.log(status.Icao)
-        // console.log("Airport in gameSetup:")
-        // console.log(airport)
-        // checkForConcert(airport, concerts)
         updateMap();
     } catch
         (error) {
         console.log(error);
     }
-
 }
-
-// function to call starting quests // set values after getting data!
-// function startingQuests() {
-//     getData(`${apiUrl}/${gameId}/ starting quest url here!`)
-// }
 
 // function to get available quest information
 async function checkQuests() {
     let quests = await getData(`${apiUrl}/${gameId}/questcheck`);
-    // console.log(`Quests:`);
-    // console.log(quests);
-    // console.log(quests[0]);
     for (let x in quests) {
         let tag = '#aq' + (parseInt(x) + 1);
-        // console.log(`Tag:${tag}`);
         let target = document.querySelector(tag);
         let content = (`Destination: ` + quests[x].Name + `<br/>`) +
             (quests[x].Passenger_amount + ` passenger(s)` + `<br/>`) +
@@ -184,7 +144,6 @@ async function checkQuests() {
         target.innerHTML = content;
     }
     return quests;
-
 }
 
 // function to get quest // hide the questbutton upon success to prevent duplicate quest accepts
@@ -198,8 +157,6 @@ async function getQuest(questButton_value, quests) {
                 let takenQuestData = await getData(
                     `${apiUrl}/${gameId}/takequest/${questButton_value}`);
                 questList.push(takenQuestData);
-                // console.log(`Taken Quest data:`);
-                // console.log(takenQuestData);
                 let content = (`Destination: ` + takenQuestData.Name + `<br/>`) +
                     (takenQuestData.Passenger_amount + ` passenger(s)` + `<br/>`) +
                     (`Reward: ` + takenQuestData.Reward + `€` + `<br/>` +
@@ -226,7 +183,6 @@ async function questComplete(airport) {
     if (airport.Is_quest_destination === true) {
         airport.Is_quest_destination = false
         let moneyAfterQuest = await getData(`${apiUrl}/${gameId}/completequest`);
-        // console.log(moneyAfterQuest);
         alert(
             `Olet suorittanut tehtävän ja saanut palkkioksi:${moneyAfterQuest[0].Money -
             status.Money}€`);
@@ -249,8 +205,6 @@ function checkIfQuestFailed() {
 
 // function to get starting status
 function startStatus(status) {
-    // console.log('Status:');
-    // console.log(status);
     document.querySelector('#consumed').innerHTML = status.Co2_consumed;
     document.querySelector('#budget').innerHTML = status.Co2_budget;
     document.querySelector('#money').innerHTML = status.Money;
@@ -264,8 +218,6 @@ function startStatus(status) {
 // function to update game status
 function updateStatus(gameData) {
     let newStatus = gameData[0];
-    // console.log('Status2+:');
-    // console.log(status);
     status.Co2_consumed = newStatus.Co2_consumed;
     status.Money = newStatus.Money;
     status.Turn = newStatus.Turn;
@@ -283,15 +235,6 @@ function updateStatus(gameData) {
     document.querySelector('#airport-name').innerHTML = newStatus.Name;
 }
 
-// function to show weather at selected airport
-// function showWeather(airport) {
-//   document.querySelector('#airport-name').innerHTML = airport.name;
-//   document.querySelector('#airport-temp').innerHTML = `${airport.weather.temp}°C`;
-//   document.querySelector('#weather-icon').src = airport.weather.icon;
-//   document.querySelector('#airport-conditions').innerHTML = airport.weather.description;
-//   document.querySelector('#airport-wind').innerHTML = `${airport.weather.wind.speed}m/s`;
-// }
-
 // function to find index of icao
 function getIndex(array, value) {
     return array.findIndex(obj => obj.Icao === value);
@@ -300,16 +243,12 @@ function getIndex(array, value) {
 // function to complete concert
 async function watchConcert() {
     return await getData(`${apiUrl}/${gameId}/watch`);
-
 }
 
 // function to check if concert active in location
 async function checkForConcert(airport) {
-    // console.log("Airport from checkForConcert:")
-    // console.log(airport)
     if (airport.Concert_status === true) {
         let concert = concerts[getIndex(concerts, airport.Icao)];
-        // let participation_check = confirm(`Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}`)
         if (confirm(
             `Sijainnissa on aktiivinen konsertti, haluatko osallistua? Lippu maksaa ${concert.Price}€`)) {
             let balance_check = (status.Money >= concert.Price);
@@ -331,16 +270,10 @@ async function checkForConcert(airport) {
     }
 }
 
-// function to check if any goals have been reached
-// Might be useless?
-
 // function to update goal data and goal table in UI
-// This is needed?!
 function updateConcerts() {
     document.querySelector('#goals').innerHTML = '';
     for (let concert of concerts) {
-        // console.log("Concert:")
-        // console.log(concert)
         const li = document.createElement('li');
         const figure = document.createElement('figure');
         const img = document.createElement('img');
@@ -415,21 +348,14 @@ function gameWon() {
         dialog.showModal()
     }
 }
-// <button onClick="window.location.reload();">Refresh Page</button>
 
 // function to update map
 async function updateMap() {
     for (let airport of airports) {
         const marker = L.marker([airport.Latitude, airport.Longitude]).addTo(map);
         airportMarkers.addLayer(marker);
-        // console.log("Airport vs gamedata")
-        // console.log(airport.Icao)
-        // console.log(status.Icao)
         if (airport.Icao === status.Icao) {
             map.flyTo([airport.Latitude, airport.Longitude], 10);
-            // showWeather(airport);
-            // console.log('Airport in updateMap:');
-            // console.log(airport);
             checkForConcert(airport, concerts);
             questComplete(airport);
             marker.bindPopup(`You are here: <b>${airport.Name}</b>`);
@@ -455,8 +381,6 @@ async function updateMap() {
                 flyTo(airport.Icao);
             });
         } else if (airport.Concert_status) {
-            // console.log("Airport with Concert status")
-            // console.log(airport)
             marker.setIcon(blueIcon);
             const popupContent = document.createElement('div');
             const h4 = document.createElement('h4');
@@ -468,10 +392,6 @@ async function updateMap() {
             popupContent.append(goButton);
             const p = document.createElement('p');
             let index = getIndex(concerts, airport.Icao);
-            // console.log('Concerts index:');
-            // console.log(concerts[index]);
-            // console.log(index);
-            // console.log(concerts);
             p.innerHTML = `Täällä ${concerts[index].Genre} konsertti`;
             popupContent.append(p);
             marker.bindPopup(popupContent);
@@ -508,15 +428,10 @@ async function updateMap() {
             goButton.classList.add('flybutton');
             goButton.innerHTML = 'Fly here';
             popupContent.append(goButton);
-            // const p = document.createElement('p');
-            // let index = getIndex(quests, airport.Icao)
-            // p.innerHTML = `Täällä tehtävä joka epäonnistuu vuorolla ${quests[index].turn} `;
-            // popupContent.append(p);
             marker.bindPopup(popupContent);
             goButton.addEventListener('click', async function () {
                 flyTo(airport.Icao);
             });
-            // // updateConcerts();
         }
     }
 }
@@ -527,8 +442,6 @@ async function gameSetup(url) {
     try {
         airportMarkers.clearLayers();
         gameData = await getData(url);
-        // console.log('Game Data:');
-        // console.log(gameData);
         gameId = gameData[0].Id;
         for (let i = 0; i < gameData[2].length; i++) {
             airports.push(gameData[2][i]);
@@ -536,19 +449,11 @@ async function gameSetup(url) {
         for (let i = 0; i < gameData[1].length; i++) {
             concerts.push(gameData[1][i]);
         }
-        // console.log("Airports:")
-        // console.log(airports)
-        // console.log(airports[0])
-        // console.log("Concerts:")
-        // console.log(concerts)
-        // console.log(concerts[0])
         status = gameData[0];
         startStatus(status);
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
-        // console.log(status.Icao)
-        // console.log("Airport in gameSetup:")
-        // console.log(airport)
+
         checkForConcert(airport, concerts);
         updateMap();
         updateConcerts();
@@ -558,21 +463,13 @@ async function gameSetup(url) {
     }
 }
 
-// event listener to hide goal splash
-/*document.querySelector('.goal').addEventListener('click', function (evt) {
-  evt.currentTarget.classList.add('hide');
-});
-*/
 let tehtava_button = document.getElementById('t_button');
 let konsertti_button = document.getElementById('k_button');
 let valitse_button = document.getElementById('tk_button');
 
-//let paivitys_button = document.getElementById( "p_button")
 tehtava_button.addEventListener('click', hidequest);
 konsertti_button.addEventListener('click', hideconcert);
 valitse_button.addEventListener('click', showDialog);
-
-//paivitys_button.addEventListener("click", hideupgrade)
 
 function hidequest() {
     var x = document.getElementById('tehtava');
@@ -583,7 +480,6 @@ function hidequest() {
 
     } else x.style.display = 'block';
     y.style.display = 'none';
-
 }
 
 function hideconcert() {
@@ -592,10 +488,8 @@ function hideconcert() {
     if (y.style.display === 'none') {
         y.style.display = 'block';
         x.style.display = 'none';
-
     } else y.style.display = 'block';
     x.style.display = 'none';
-
 }
 
 const dialog = document.querySelector('dialog');
