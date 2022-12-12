@@ -642,3 +642,6 @@ tr{
 .button-47:hover {
   background-color: #bceef0;
 }
+.resetbutton {
+  width: 100%;
+}
