@@ -72,5 +72,3 @@ class Game:
                     self.money = self.money - concert.price
                     concert.concert_over = True
                     self.location.concert_here = False
-
-
