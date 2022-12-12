@@ -104,10 +104,13 @@ async function flyTo(dest_icao) {
     airports = [];
     airportMarkers.clearLayers();
     gameData = await getData(`${apiUrl}/${gameId}/flyto/${dest_icao}`);
+    if (gameData[0].Quest_status === false){
+      new Audio('audio/flying_sound.mp3').play()
+    }
     // console.log("GAMEDATA 2.0:")
     // console.log(gameData)
-    // console.log("Game Data:")
-    // console.log(gameData);
+    console.log("Game Data:")
+    console.log(gameData);
     for (let i = 0; i < gameData[1].length; i++) {
       airports.push(gameData[1][i]);
     }
@@ -207,6 +210,7 @@ async function questComplete(airport, quests) {
     status.Money = moneyAfterQuest[0].Money;
     document.querySelector('#money').innerHTML = status.Money;
     questList.pop([getIndex(questList, airport.Icao)]);
+    new Audio('audio/quest_complete.mp3').play()
   }
 }
 
@@ -298,6 +302,8 @@ async function checkForConcert(airport) {
 function updateConcerts() {
   document.querySelector('#goals').innerHTML = '';
   for (let concert of concerts) {
+    console.log("Concert:")
+    console.log(concert)
     const li = document.createElement('li');
     const figure = document.createElement('figure');
     const img = document.createElement('img');
@@ -308,6 +314,10 @@ function updateConcerts() {
     figure.append(img);
     figure.append(figcaption);
     li.append(figure);
+    li.addEventListener('click', function(){
+      let concertAirport = airports[getIndex(airports, concert.Icao)];
+    map.flyTo([concertAirport.Latitude, concertAirport.Longitude], 10);
+    })
     if (concert.Concert_over) { // Check this later together!!!
       li.classList.add('done');
       img.src = 'img/icons8-music-200.png';
