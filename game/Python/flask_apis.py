@@ -163,8 +163,7 @@ def complete_quest(game_id):
     try:
         game = find_game(game_id)
         game.return_quest()
-        quests_dict = []
-        quests_dict.append({"Money": game.money})
+        quests_dict = [{"Money": game.money}]
         for quest in game.quests:
             quests_dict.append({"Name": quest.name, "Destination_coordinates": quest.destination_coords,
                                 "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn})
