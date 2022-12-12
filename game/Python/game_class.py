@@ -35,16 +35,14 @@ class Game:
         consumption = distance * self.plane.get_co2mod()
         self.location.quests = []
         self.location = dest
+        self.location.generate_quests(self.turn, self)
         self.co2_consumed += consumption
         self.turn += 1
-        for selected_quest in self.quests:
-            if selected_quest.turn < self.turn:
-                self.quests.remove(selected_quest)
+        for quest in self.quests:
+            if self.turn > quest.turn:
+                quest.destination.quest_dest = False
+                self.quests.remove(quest)
                 self.failed_quests += 1
-                for airport in self.airports:
-                    if airport.icao == selected_quest.icao:
-                        airport.guest_dest = False
-        self.location.generate_quests(self.turn, self)
 
     def take_quest(self, quest_num):
         selected_quest = self.location.quests[quest_num]
