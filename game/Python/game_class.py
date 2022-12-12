@@ -68,4 +68,5 @@ class Game:
             if self.location.icao == concert.icao:
                 self.concerts_watched = self.concerts_watched + 1
                 self.money = self.money - concert.price
+                concert.concert_over = True
                 self.location.concert_here = False
