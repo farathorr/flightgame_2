@@ -39,7 +39,7 @@ class Game:
         self.co2_consumed += consumption
         self.turn += 1
         for quest in self.quests:
-            if self.turn > quest.turn:
+            if self.turn < quest.turn:
                 quest.destination.quest_dest = False
                 self.quests.remove(quest)
                 self.failed_quests += 1
