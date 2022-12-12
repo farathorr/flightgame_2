@@ -149,6 +149,7 @@ async function flyTo(dest_icao) {
         updateStatus(gameData);
         checkIfQuestFailed()
         checkGameOver()
+        gameWon()
         availableQuests = await checkQuests();
         let airport = airports[getIndex(airports, status.Icao)];
         // console.log(status.Icao)
@@ -366,7 +367,7 @@ function checkGameOver() {
     let reason = ''
     if (status.Co2_consumed > status.Co2_budget) {
         reason = "CO2 päästöt ylittivät sallitun budjetin"
-    } else if (status.Quests_failed <= 3) {
+    } else if (status.Quests_failed >= 3) {
         reason = "Epäonnistuit liian monta tehtävää"
     }
     if (reason !== '') {
@@ -377,16 +378,39 @@ function checkGameOver() {
         let button = document.createElement("button")
         button.classList.add('resetbutton')
         button.innerText = "Yritä uudelleen?"
-        button.addEventListener('click', function (){
+        button.addEventListener('click', function () {
             refreshPage()
         })
         dialog.append(button)
         dialog.showModal()
     }
 }
+
 // function to refresh page
-function refreshPage(){
+function refreshPage() {
     window.location.reload();
+}
+
+// function to check if game won
+function gameWon() {
+    if (completedConcerts.length >= 6) {
+        let score = (status.Co2_budget - status.Co2_consumed + status.Money - status.Turn * 200)
+        let name = prompt(`Onneksi olkoon onnistuit käymään kaikissa konserteissa!\nSait ${score} pistettä \n Syötä nimesi tallentaaksesi lopputuloksen`)
+        if (name !== '') {
+            getData(`${apiUrl}/${gameId}/score/${name}/${score}`)
+        }
+        airportMarkers.clearLayers();
+        let dialog = document.querySelector("dialog").innerHTML = ''
+        dialog = document.querySelector("dialog")
+        let button = document.createElement("button")
+        button.classList.add('resetbutton')
+        button.innerText = "Pelaa uudelleen"
+        button.addEventListener('click', function () {
+            refreshPage()
+        })
+        dialog.append(button)
+        dialog.showModal()
+    }
 }
 // <button onClick="window.location.reload();">Refresh Page</button>
 
