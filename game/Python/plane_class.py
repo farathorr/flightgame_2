@@ -40,7 +40,7 @@ class Plane:
         cursor = connection.cursor()
         cursor.execute(sql)
         result = cursor.fetchone()
-        return int(result[0])
+        return float(result[0])
 
 
 plane = Plane()
