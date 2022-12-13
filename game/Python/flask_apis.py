@@ -42,7 +42,7 @@ def start_game():
         response_concerts = []
         response = [{"Id": game.id, "Money": game.money, "Co2_budget": game.co2_budget,
                      "Co2_consumed": game.co2_consumed, "Quests_failed":
-                         game.failed_quests, "Concerts_watched": len(game.concerts_watched),
+                         game.failed_quests, "Concerts_watched": game.concerts_watched,
                      "Latitude": game.location.latitude, "Longitude": game.location.longitude,
                      "Icao": game.location.icao, "Turn": game.turn, "Current_co2lvl": game.plane.co2level,
                      "Current_passengerlvl": game.plane.psngrlvl, "Name": game.location.name}]
@@ -163,11 +163,10 @@ def complete_quest(game_id):
     try:
         game = find_game(game_id)
         game.return_quest()
-        quests_dict = []
+        quests_dict = [{"Money": game.money}]
         for quest in game.quests:
             quests_dict.append({"Name": quest.name, "Destination_coordinates": quest.destination_coords,
                                 "Passenger_amount": quest.passenger_amount, "Reward": quest.reward, "Turn": quest.turn})
-        quests_dict.append({"Money": game.money})
         response_json = json.dumps(quests_dict)
         return Response(response=response_json, status=200, mimetype="application/json")
     except TypeError:
@@ -229,7 +228,7 @@ def add_score_sql(game_id, score, name):
             cursor.execute(sql)
             response = []
             for i in range(5):
-                sql = f"select score, player_name from top_score group by score order by score desc limit {i},1"
+                sql = f"select player_name, score  from top_score group by score order by score desc limit {i},1"
                 cursor = connection.cursor()
                 cursor.execute(sql)
                 response.append(cursor.fetchall())

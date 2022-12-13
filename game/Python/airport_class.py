@@ -26,7 +26,7 @@ class Airport:
                 self.passenger_amount = passenger_amount
                 self.reward = round(
                     int(distance.distance(cur_loc_coords, self.destination_coords).km * 0.25 * passenger_amount))
-                self.turn = turn + 3
+                self.turn = int(turn) + 3
 
         for i in range(3):
             self.quests.append(Quest(i + 1))
